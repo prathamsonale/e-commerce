@@ -2,31 +2,39 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Contact() {
+  // State to manage form input data
   const [data, setData] = useState({
-    fname: "",
-    lname: "",
-    email: "",
-    subject: "",
-    message: "",
+    fname: "", // First Name
+    lname: "", // Last Name
+    email: "", // Email Address
+    subject: "", // Subject of the message
+    message: "", // Message content
   });
 
+  // State to manage form validation errors
   const [error, setError] = useState({});
+
+  // State to handle success message after form submission
   const [successful, setSuceessful] = useState("");
 
+  // Handle input field changes, update the form data and clear error messages
   const handleChange = (e) => {
     setData({
       ...data,
-      [e.target.id]: e.target.value,
+      [e.target.id]: e.target.value, // Dynamically update the respective field
     });
     setError({
       ...error,
-      [`${e.target.id}Error`]: "",
+      [`${e.target.id}Error`]: "", // Clear any previous error for the current field
     });
-    setSuceessful("");
+    setSuceessful(""); // Clear any success message
   };
 
+  // Function to validate the form fields before submitting
   const validate = () => {
-    const erromessages = {};
+    const erromessages = {}; // Object to store validation error messages
+
+    // Validate first name
     if (data.fname.trim().length < 3 || data.fname.trim().length === 0) {
       if (data.fname.trim().length < 3) {
         erromessages.fnameError = "First name must have at least 3 characters";
@@ -35,6 +43,8 @@ function Contact() {
         erromessages.fnameError = "First name is required";
       }
     }
+
+    // Validate last name
     if (data.lname.trim().length < 3 || data.lname.trim().length === 0) {
       if (data.lname.trim().length < 3) {
         erromessages.lnameError = "Last name must have at least 3 characters";
@@ -43,8 +53,10 @@ function Contact() {
         erromessages.lnameError = "Last name is required";
       }
     }
+
+    // Validate email address
     if (
-      !/\S+@\S+\.\S+/.test(data.email.trim()) ||
+      !/\S+@\S+\.\S+/.test(data.email.trim()) || // Regular expression to validate email format
       data.email.trim().length === 0
     ) {
       if (!/\S+@\S+\.\S+/.test(data.email.trim())) {
@@ -55,6 +67,7 @@ function Contact() {
       }
     }
 
+    // Validate subject
     if (data.subject.trim().length < 3 || data.subject.trim().length === 0) {
       if (data.subject.trim().length < 3) {
         erromessages.subjectError = "Subject must have at least 3 characters";
@@ -63,14 +76,21 @@ function Contact() {
         erromessages.subjectError = "Subject is required";
       }
     }
+
+    // Set error messages to state
     setError(erromessages);
+
+    // If there are no error messages, the form is valid
     return Object.keys(erromessages).length === 0;
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
     if (validate()) {
+      // If the form is valid, show success message
       setSuceessful("Response submitted successfully.");
+      // Clear the form fields
       setData({
         fname: "",
         lname: "",
@@ -78,14 +98,15 @@ function Contact() {
         subject: "",
         message: "",
       });
-      console.log(data);
+      console.log(data); // Log the form data (optional)
     } else {
-      console.log("Form contains errors");
+      console.log("Form contains errors"); // Log if form validation fails
     }
   };
 
   return (
     <>
+      {/* Breadcrumbs for navigation */}
       <div className="breadcrumbs">
         <div className="container">
           <div className="row">
@@ -103,9 +124,11 @@ function Contact() {
         </div>
       </div>
 
+      {/* Contact Section */}
       <div id="colorlib-contact">
         <div className="container">
           <div className="row">
+            {/* Contact Info */}
             <div className="col-sm-12">
               <h3>Contact Information</h3>
               <div className="row contact-info-wrap">
@@ -148,11 +171,13 @@ function Contact() {
           </div>
 
           <div className="row">
+            {/* Contact Form */}
             <div className="col-md-6">
               <div className="contact-wrap">
                 <h3>Get In Touch</h3>
                 <form className="contact-form" onSubmit={handleSubmit}>
                   <div className="row">
+                    {/* First Name */}
                     <div className="col-md-6">
                       <div className="form-group">
                         <label htmlFor="fname">First Name</label>
@@ -172,6 +197,7 @@ function Contact() {
                       </div>
                     </div>
 
+                    {/* Last Name */}
                     <div className="col-md-6">
                       <div className="form-group">
                         <label htmlFor="lname">Last Name</label>
@@ -191,6 +217,7 @@ function Contact() {
                       </div>
                     </div>
 
+                    {/* Email */}
                     <div className="w-100"></div>
                     <div className="col-sm-12">
                       <div className="form-group">
@@ -211,6 +238,7 @@ function Contact() {
                       </div>
                     </div>
 
+                    {/* Subject */}
                     <div className="w-100"></div>
                     <div className="col-sm-12">
                       <div className="form-group">
@@ -231,6 +259,7 @@ function Contact() {
                       </div>
                     </div>
 
+                    {/* Message */}
                     <div className="w-100"></div>
                     <div className="col-sm-12">
                       <div className="form-group">
@@ -248,6 +277,7 @@ function Contact() {
                       </div>
                     </div>
 
+                    {/* Submit Button */}
                     <div className="w-100"></div>
                     <div className="col-sm-12">
                       <div className="form-group text-center">
@@ -259,6 +289,7 @@ function Contact() {
                       </div>
                     </div>
 
+                    {/* Success Message */}
                     {successful && (
                       <p className="text-success fw-bold text-center">
                         {successful}
@@ -269,6 +300,7 @@ function Contact() {
               </div>
             </div>
 
+            {/* Google Map */}
             <div className="col-md-6">
               <div id="map">
                 <iframe

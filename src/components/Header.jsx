@@ -1,25 +1,33 @@
-import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/images/images-removebg-preview.png";
-import { useSelector } from "react-redux";
-import loginLogo from "../assets/images/UserLogin/avatar.png";
-import { useRef } from "react";
-import { checkUserLoggedIn } from "./reuseable-code/CheckedLoggedIn";
+import { Link, useNavigate } from "react-router-dom";  // Importing necessary components for routing
+import logo from "../assets/images/images-removebg-preview.png";  // Import logo image
+import { useSelector } from "react-redux";  // Importing useSelector to access Redux store
+import loginLogo from "../assets/images/UserLogin/avatar.png";  // Import login avatar image
+import { useRef } from "react";  // Import useRef to handle references
+import { checkUserLoggedIn } from "./reuseable-code/CheckedLoggedIn";  // Import function to check user login status
 
 function Header() {
+  // Using Redux to access cart products from the store
   const cartProducts = useSelector((state) => state.cart.cartProducts);
+  
+  // useNavigate hook to navigate programmatically between routes
   const navigate = useNavigate();
 
-  // Create refs for toggler and collapsible navbar
+  // Create refs for toggler button and collapsible navbar to control collapse state
   const navbarTogglerRef = useRef(null);
   const navbarCollapseRef = useRef(null);
 
+  // Function to close the navbar when a link is clicked
   const closeNavbar = () => {
+    // Check if the navbar is open (i.e., has class "show")
     if (navbarCollapseRef.current.classList.contains("show")) {
-      navbarTogglerRef.current.click(); // Simulate click to close
+      // Simulate a click on the toggler to close the navbar
+      navbarTogglerRef.current.click();
     }
   };
 
+  // Function to handle login logo click event
   const handleLoginLogoClick = () => {
+    // If user is logged in, navigate to the dashboard, otherwise navigate to login page
     if (checkUserLoggedIn()) {
       navigate("/users/dashboard");
     } else {
@@ -33,9 +41,12 @@ function Header() {
         <div className="special">
           <nav className="navbar navbar-expand-lg navbar-light mt-2">
             <div className="container-fluid">
+              {/* Logo and home link */}
               <Link to="/" className="navbar-brand">
                 <img src={logo} alt="Logo" />
               </Link>
+
+              {/* Navbar toggler button for mobile view */}
               <button
                 ref={navbarTogglerRef}
                 className="navbar-toggler"
@@ -48,17 +59,20 @@ function Header() {
               >
                 <span className="navbar-toggler-icon"></span>
               </button>
+
+              {/* Navbar collapse (links and other elements) */}
               <div
                 className="collapse navbar-collapse"
                 ref={navbarCollapseRef}
                 id="navbarSupportedContent"
               >
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                  {/* Navigation links */}
                   <li className="nav-item dropdown">
                     <Link
                       to="/men"
                       className="nav-link text-dark"
-                      onClick={closeNavbar}
+                      onClick={closeNavbar}  // Close navbar when link is clicked
                     >
                       <i className="fa-solid fa-person"></i>
                       Mens
@@ -105,10 +119,13 @@ function Header() {
                     </Link>
                   </li>
                 </ul>
+
+                {/* Right-aligned section for cart and login */}
                 <ul
                   className="navbar-nav ms-auto mb-2 mb-lg-0 d-flex"
                   id="cart"
                 >
+                  {/* Cart icon with product count */}
                   <li className="nav-item position-relative">
                     <Link
                       to="/cart"
@@ -117,26 +134,26 @@ function Header() {
                     >
                       <i className="fas fa-shopping-cart me-1"></i>
                       <span className="badge bg-danger position-absolute top-0 start-100 translate-middle">
-                        {cartProducts.length}
+                        {cartProducts.length}  {/* Display number of items in cart */}
                       </span>
                       <span className="d-none cart-show">
                         <i className="fa-solid fa-cart-shopping"></i>
                         Cart{" "}
                         <span className="text-danger">
-                          [{cartProducts.length}]
+                          [{cartProducts.length}]  {/* Show item count next to "Cart" */}
                         </span>
                       </span>
                     </Link>
                   </li>
 
-                  <li
-                    className="nav-item ms-5 login-logo"
-                    onClick={closeNavbar}
-                  >
+                  {/* Login logo (avatar) */}
+                  <li className="nav-item ms-5 login-logo" onClick={closeNavbar}>
                     <span onClick={handleLoginLogoClick}>
                       <img src={loginLogo} alt="Login logo" />
                     </span>
                   </li>
+
+                  {/* Login button (hidden by default, shown on smaller screens) */}
                   <li className="nav-item" onClick={closeNavbar}>
                     <p
                       className="d-none nav-link"
@@ -153,6 +170,7 @@ function Header() {
           </nav>
         </div>
 
+        {/* Sale announcement banner */}
         <div className="sale">
           <div className="container">
             <div className="row">
@@ -161,6 +179,7 @@ function Header() {
                   <div className="owl-carousel2">
                     <div className="item">
                       <div className="col sale-info">
+                        {/* Sale info banner with link */}
                         <h3 className="default-info">
                           <a href="/nothing">
                             25% off (Almost) Everything! Use Code: Summer sale

@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MenSkeletonLoader from "./reuseable-code/MenSkeletonLoader";
-import { LazyLoadImage } from "react-lazy-load-image-component"; // Import LazyLoadImage
-import "react-lazy-load-image-component/src/effects/blur.css"; //  Adds a blur effect while loading
+import { LazyLoadImage } from "react-lazy-load-image-component"; // Import LazyLoadImage for lazy loading images
+import "react-lazy-load-image-component/src/effects/blur.css"; // Importing blur effect for lazy loading images
 
 function Women() {
+  // State to control loading status of products
   const [loading, setLoading] = useState(true);
 
+  // useEffect hook to simulate data loading with a delay
   useEffect(() => {
     setTimeout(() => {
-      setLoading(false);
+      setLoading(false); // After 1 second, set loading to false (simulate data load)
     }, 1000);
   }, []);
 
-  // Array of product data
+  // Array containing product data for Women's section
   const products = [
     {
       id: 1,
@@ -43,15 +45,14 @@ function Women() {
 
   return (
     <>
+      {/* Breadcrumb Navigation */}
       <div className="breadcrumbs">
         <div className="container">
           <div className="row">
             <div className="col">
-              <p className="bread fw-bold ">
+              <p className="bread fw-bold">
                 <span>
-                  <Link to="/" className="pointer-cursor">
-                    Home
-                  </Link>
+                  <Link to="/" className="pointer-cursor">Home</Link>
                 </span>{" "}
                 / <span>Women</span>
               </p>
@@ -60,15 +61,17 @@ function Women() {
         </div>
       </div>
 
+      {/* Section for Women Category Title and Links */}
       <div className="breadcrumbs-two">
         <div className="container-fluid">
           <div className="row special">
             <div className="col">
               <div className="breadcrumbs-img breadcrumbs-women">
-                <h2>Women's</h2>
+                <h2>Women's</h2> {/* Title for Women Category */}
               </div>
               <div className="menu text-center">
                 <p>
+                  {/* Menu Links for Filtering Products */}
                   <Link to="#">New Arrivals</Link>{" "}
                   <Link to="#">Best Sellers</Link>{" "}
                   <Link to="#">Extended Widths</Link> <Link to="#">Sale</Link>
@@ -79,36 +82,38 @@ function Women() {
         </div>
       </div>
 
+      {/* Product Display Section */}
       <div className="container-fluid">
         <div className="special">
           <div className="row">
-            {/* Map over the products array */}
+            {/* Conditional rendering based on loading state */}
             {loading
-              ? Array(4) // Replace with filteredProducts.length or dynamically based on your requirement
+              ? Array(4) // Display loading skeletons when loading
                   .fill(0)
                   .map((_, index) => (
-                    <div
-                      key={index}
-                      className="col-lg-3 col-md-6 col-sm-12 mb-4"
-                    >
-                      <MenSkeletonLoader />
+                    <div key={index} className="col-lg-3 col-md-6 col-sm-12 mb-4">
+                      <MenSkeletonLoader /> {/* Skeleton loader for product cards */}
                     </div>
                   ))
               : products.map((product) => (
+                  // Map over the products array to display product cards once loaded
                   <div
                     key={product.id}
                     className="col-lg-3 col-md-6 col-sm-12 d-flex justify-content-center align-items-center mb-2"
                   >
                     <div className="product-card text-center p-2">
+                      {/* Lazy loading image with blur effect */}
                       <div>
                         <LazyLoadImage
                           alt={product.title}
-                          src={product.imageUrl} // Image source
-                          effect="blur" //  Adds a blur effect while loading
+                          src={product.imageUrl} // Image source URL
+                          effect="blur" // Adds blur effect while image is loading
                         />
                       </div>
+                      {/* Product details */}
                       <h4>{product.title}</h4>
                       <h5>{product.price}</h5>
+                      {/* Link to product page */}
                       <Link to="/allproducts">
                         <button className="btn btn-dark">Go to products</button>
                       </Link>

@@ -2,26 +2,31 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/style.css";
 import axios from "axios";
-import Cookies from "js-cookie"; // Import js-cookie
-import { signUpValidationSchema } from "../reuseable-code/ValidationSchemas"; //Import Validation Schema
-import Loader from "../reuseable-code/Loader";
-import { checkUserLoggedIn } from "../reuseable-code/CheckedLoggedIn";
+import Cookies from "js-cookie"; // Import js-cookie for cookie management
+import { signUpValidationSchema } from "../reuseable-code/ValidationSchemas"; // Import the validation schema
+import Loader from "../reuseable-code/Loader"; // Import Loader component for loading state
+import { checkUserLoggedIn } from "../reuseable-code/CheckedLoggedIn"; // Import function to check if user is logged in
 import { useDispatch } from "react-redux";
-import { setUserId } from "../../redux/user/userSlice";
+import { setUserId } from "../../redux/user/userSlice"; // Redux action to set user ID
+
 function SignUp() {
-  const [passwordStatus, setPasswordStatus] = useState(false); // Password toggle visibility
-  const navigate = useNavigate(); // Navigation
-  const [loading, setLoading] = useState(false); // Loading state
-  const dispatch = useDispatch();
-  // User details
+  // State hooks for password visibility, form data, errors, and loading
+  const [passwordStatus, setPasswordStatus] = useState(false); // Toggles password visibility
+  const navigate = useNavigate(); // Navigation hook for redirecting
+  const [loading, setLoading] = useState(false); // Loading state when submitting form
+  const dispatch = useDispatch(); // Redux dispatch function
+
+  // User form data state (name, email, password)
   const [usersData, setUserData] = useState({
     name: "",
     email: "",
     password: "",
   });
 
-  const [error, setError] = useState({}); // To store error message object
+  // State to store validation error messages
+  const [error, setError] = useState({});
 
+  // Handle change in input fields and clear error for the corresponding field
   const handleChange = (e) => {
     setUserData({
       ...usersData,
@@ -29,97 +34,116 @@ function SignUp() {
     });
     setError({
       ...error,
-      [e.target.id]: "",
+      [e.target.id]: "", // Reset error for this specific field
     });
   };
 
+  // Use effect to check if the user is logged in, if true, redirect to homepage
   useEffect(() => {
     if (checkUserLoggedIn()) {
-      navigate("/");
+      navigate("/"); // Redirect to homepage if logged in
     }
   }, [navigate]);
 
+  // Function to validate form data using the validation schema
   const validate = async () => {
     try {
+      // Validate data using Yup schema (signUpValidationSchema)
       await signUpValidationSchema().validate(usersData, {
-        abortEarly: false,
+        abortEarly: false, // Do not stop after the first error
       });
-      setError({}); // Clear errors if validation passes
+      setError({}); // Clear errors if validation is successful
       return true;
     } catch (err) {
       const errors = {};
       err.inner.forEach((error) => {
+        // Collect all validation errors into an object
         errors[error.path] = error.message;
       });
-      setError(errors);
-      window.scrollTo(0, 0);
+      setError(errors); // Set validation errors
+      window.scrollTo(0, 0); // Scroll to the top of the page to show errors
       return false;
     }
   };
 
+  // Function to check if the user already exists in the database
   const matchUserData = async () => {
     try {
-      const response = await axios.get(import.meta.env.VITE_USER_KEY);
+      const response = await axios.get(import.meta.env.VITE_USER_KEY); // Fetch users from the API
       const existingUser = await response.data.find(
-        (user) => user.email === usersData.email
+        (user) => user.email === usersData.email // Check if the email already exists
       );
-      return existingUser || null;
+      return existingUser || null; // Return existing user or null
     } catch (err) {
       console.error(err);
       return null;
     }
   };
 
+  // Handle form submission (sign-up process)
   const handleSignUp = async () => {
     if (await validate()) {
-      const existingUser = await matchUserData();
+      const existingUser = await matchUserData(); // Check if user already exists
       if (!existingUser) {
-        const mockToken = `token-${usersData.email}-${Date.now()}`;
+        const mockToken = `token-${usersData.email}-${Date.now()}`; // Generate a mock token
         const userWithToken = { ...usersData, token: mockToken };
-        setLoading(true);
+        setLoading(true); // Set loading to true during form submission
         try {
+          // Send POST request to create a new user
           const response = await axios.post(
             import.meta.env.VITE_USER_KEY,
             userWithToken
           );
-          console.log(response.data.id);
+          console.log(response.data.id); // Log the newly created user's ID
 
           const expires = new Date();
-          expires.setDate(expires.getDate() + 7); // Set expiration to 7 days from now
+          expires.setDate(expires.getDate() + 7); // Set cookie expiration to 7 days from now
 
+          // Set the user session in cookies
           Cookies.set("user_session", JSON.stringify(response.data.token), {
             expires: expires, // Set expiration as a Date object
-            secure: process.env.NODE_ENV === "production", // Only set secure : true if using HTTPS
+            secure: process.env.NODE_ENV === "production", // Use secure cookies in production
             sameSite: "Strict",
           });
+
+          // Dispatch the user ID to Redux store
           dispatch(setUserId(response.data.id));
+          
+          // Clear form fields
           setUserData({ name: "", email: "", password: "" });
+          
+          // Redirect to homepage
           navigate("/");
         } catch (error) {
-          setError({ general: "Signup failed. Please try again." }); // More general error message
+          // Set error message if sign-up fails
+          setError({ general: "Signup failed. Please try again." });
           console.error("Error during signup:", error);
         } finally {
-          setLoading(false);
+          setLoading(false); // Reset loading state
         }
       } else {
+        // Set error message if email already exists
         setError({ email: "Email already exists." });
       }
     }
   };
 
+  // Handle keyboard navigation between fields (e.g. up/down arrows, enter key)
   const handleKeyDown = (e, nextField, prevField) => {
     if (e.key === "ArrowDown") {
       document.getElementById(nextField)?.focus(); // Move to next field
     } else if (e.key === "ArrowUp") {
       document.getElementById(prevField)?.focus(); // Move to previous field
     } else if (e.key === "Enter") {
-      handleSignUp();
+      handleSignUp(); // Trigger sign-up on Enter key press
     }
   };
 
   return (
     <>
-      {loading && <Loader />}
+      {loading && <Loader />} {/* Show loading spinner if loading state is true */}
+      
+      {/* Breadcrumb navigation */}
       <div className="breadcrumbs">
         <div className="container-fluid">
           <div className="row">
@@ -136,6 +160,8 @@ function SignUp() {
           </div>
         </div>
       </div>
+
+      {/* Main sign-up form */}
       <div
         className="container-fluid d-flex justify-content-center align-items-center"
         id="userLogin"
@@ -145,6 +171,7 @@ function SignUp() {
             <form>
               <h1>Register With</h1>
               <div className="social-icons">
+                {/* Social login icons */}
                 <Link to="#" className="icon">
                   <i className="fa-brands fa-google-plus-g"></i>
                 </Link>
@@ -160,6 +187,7 @@ function SignUp() {
               </div>
               <h1>OR</h1>
               <div className="d-flex justify-content-start align-items-start flex-column">
+                {/* Name input field */}
                 <div className="email mb-3 d-flex justify-content-start align-items-start flex-column">
                   <input
                     id="name"
@@ -178,6 +206,7 @@ function SignUp() {
                     </span>
                   )}
                 </div>
+                {/* Email input field */}
                 <div className="email mb-3 d-flex justify-content-start align-items-start flex-column">
                   <input
                     id="email"
@@ -196,6 +225,7 @@ function SignUp() {
                     </span>
                   )}
                 </div>
+                {/* Password input field with toggle visibility */}
                 <div className="password d-flex justify-content-center align-items-center">
                   <input
                     id="password"
@@ -230,6 +260,7 @@ function SignUp() {
                   </span>
                 )}
               </div>
+              {/* Submit button */}
               <button type="button" className="mt-3" onClick={handleSignUp}>
                 Sign Up
               </button>
@@ -241,6 +272,7 @@ function SignUp() {
               </Link>
             </form>
           </div>
+          {/* Info panel for sign-in */}
           <div className="col-lg-6 info">
             <div className="info-panel">
               <h1>Welcome Back!</h1>

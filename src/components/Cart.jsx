@@ -1,78 +1,90 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import { increment, decrement, removeProduct } from "../redux/cart/cartSlice";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for programmatic navigation
+import { increment, decrement, removeProduct } from "../redux/cart/cartSlice"; // Redux actions for cart manipulation
 import Swal from "sweetalert2"; // For error or success pop-up alerts
-import { checkUserLoggedIn } from "./reuseable-code/CheckedLoggedIn";
-import { LazyLoadImage } from "react-lazy-load-image-component"; // Import LazyLoadImage
-import "react-lazy-load-image-component/src/effects/blur.css"; //  Adds a blur effect while loading
+import { checkUserLoggedIn } from "./reuseable-code/CheckedLoggedIn"; // Custom function to check if user is logged in
+import { LazyLoadImage } from "react-lazy-load-image-component"; // Lazy loading for images
+import "react-lazy-load-image-component/src/effects/blur.css"; // Import blur effect for lazy loading
 
 function Cart() {
+  // Accessing cart products from the Redux store
   const cartProducts = useSelector((state) => state.cart.cartProducts);
-  const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const dispatch = useDispatch(); // Dispatch function to send actions to Redux store
+  const navigate = useNavigate(); // Initialize useNavigate for navigation after login or checkout
 
-  // State for managing delivery, discount, and coupon
+  // State to manage delivery charges, discount, and coupon input
   const [delivery, setDelivery] = useState(0);
   const [discount, setDiscount] = useState(0);
-  const [coupon, setCoupon] = useState("");
-  const [couponError, setCouponError] = useState("");
-  const [SubTotal, setSubTotal] = useState(0);
+  const [coupon, setCoupon] = useState(""); // User's input for the coupon code
+  const [couponError, setCouponError] = useState(""); // Error message for invalid coupon
+  const [SubTotal, setSubTotal] = useState(0); // Calculated subtotal for all products in the cart
 
+  // Calculate delivery charges based on the length of the SubTotal
   const length = String(SubTotal).length;
   useEffect(() => {
-    if (length === 3) setDelivery(40);
-    else if (length === 4) setDelivery(70);
-    else if (length === 5) setDelivery(100);
-    else if (length > 5) setDelivery(150);
-    else setDelivery(0);
-  }, [SubTotal, length]);
+    if (length === 3)
+      setDelivery(40); // Delivery charge for SubTotal in the 100-999 range
+    else if (length === 4)
+      setDelivery(70); // Delivery charge for SubTotal in the 1000-9999 range
+    else if (length === 5)
+      setDelivery(100); // Delivery charge for SubTotal in the 10000-99999 range
+    else if (length > 5)
+      setDelivery(150); // Delivery charge for SubTotal greater than 99999
+    else setDelivery(0); // No delivery charge if SubTotal is less than 100
+  }, [SubTotal, length]); // Re-run this effect whenever SubTotal or length changes
 
+  // Update coupon input value and reset error message on change
   const handleChange = (e) => {
     setCoupon(e.target.value);
     setCouponError("");
   };
+
+  // Recalculate SubTotal whenever cartProducts change
   useEffect(() => {
     if (cartProducts) {
       setSubTotal(
         cartProducts.reduce((total, product) => {
-          return total + product.price * product.quantity;
+          return total + product.price * product.quantity; // Calculate total cost for each product
         }, 0)
       );
     }
-  }, [cartProducts]);
+  }, [cartProducts]); // Recalculate SubTotal when cartProducts change
 
-  // Apply coupon logic
+  // Apply the coupon if valid
   const applyCoupon = () => {
     const couponValue = Number(coupon);
     if (couponValue > 0 && couponValue <= SubTotal) {
-      setDiscount(couponValue);
-      setCouponError("");
+      setDiscount(couponValue); // Apply discount if coupon is valid
+      setCouponError(""); // Clear any previous error messages
     } else {
+      // Show error message if coupon is invalid or exceeds SubTotal
       setCouponError(
         couponValue > SubTotal
           ? "Coupon cannot be greater than total amount."
           : "Coupon is not valid!"
       );
     }
-    setCoupon("");
+    setCoupon(""); // Clear the coupon input after applying
   };
 
-  // Handle Enter key for coupon application
+  // Handle Enter key for applying the coupon
   const handleKeydown = (e) => {
     if (e.key === "Enter") {
       applyCoupon();
     }
   };
 
+  // Handle checkout logic, checking if user is logged in
   const handleCheckout = () => {
     if (checkUserLoggedIn()) {
-      const finalAmount = SubTotal + delivery - discount;
-      const deliveryCharges = delivery;
+      const finalAmount = SubTotal + delivery - discount; // Calculate final amount after delivery and discount
+      const deliveryCharges = delivery; // Pass delivery charges separately
       navigate("/checkout", {
-        state: { finalAmount, deliveryCharges },
-      }); // Navigate with totalAmount
+        state: { finalAmount, deliveryCharges }, // Pass the data to the checkout page
+      });
     } else {
+      // Show login prompt if user is not logged in
       Swal.fire({
         title: "Error!",
         text: "Login or Signup is required!",
@@ -81,13 +93,13 @@ function Cart() {
         confirmButtonText: "Go to Login",
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate("/userlogin");
+          navigate("/userlogin"); // Navigate to the login page if user confirms
         }
       });
     }
   };
 
-  // Show empty cart message if no products
+  // Check if cart is empty
   const isEmptyCart = cartProducts.length === 0;
 
   return (
@@ -108,6 +120,8 @@ function Cart() {
           </div>
         </div>
       </div>
+
+      {/* If the cart is empty, show a message with an image */}
       {isEmptyCart ? (
         <div className="text-center empty-cart">
           <LazyLoadImage
@@ -121,6 +135,7 @@ function Cart() {
           </Link>
         </div>
       ) : (
+        /* If cart is not empty, display cart products and calculation section */
         <div className="container-fluid mt-3">
           {cartProducts.map((product) => (
             <div className="row special" key={product.id}>

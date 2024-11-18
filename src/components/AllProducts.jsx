@@ -1,62 +1,66 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addProduct } from "../redux/cart/cartSlice";
-import { addToWishlist, removeFromWishlist } from "../redux/cart/wishlistslice";
-import { checkUserLoggedIn } from "./reuseable-code/CheckedLoggedIn";
-import AllProductsSkeletonLoader from "./reuseable-code/AllProductsSkeletonLoader";
-import { LazyLoadImage } from "react-lazy-load-image-component"; // Import LazyLoadImage
-import "react-lazy-load-image-component/src/effects/blur.css"; //  Adds a blur effect while loading
+import axios from "axios"; 
+import React, { useEffect, useState } from "react"; 
+import { Link } from "react-router-dom"; 
+import { useDispatch, useSelector } from "react-redux"; 
+import { addProduct } from "../redux/cart/cartSlice"; 
+import { addToWishlist, removeFromWishlist } from "../redux/cart/wishlistslice"; 
+import { checkUserLoggedIn } from "./reuseable-code/CheckedLoggedIn"; 
+import AllProductsSkeletonLoader from "./reuseable-code/AllProductsSkeletonLoader"; 
+import { LazyLoadImage } from "react-lazy-load-image-component"; // Import LazyLoadImage for optimized image loading
+import "react-lazy-load-image-component/src/effects/blur.css"; // Import blur effect during image load
 
 const AllProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const wishlist = useSelector((state) => state.wishlist.items);
-  const dispatch = useDispatch();
-  const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
-  const [hasScrolled, setHasScrolled] = useState(false); // State to track if user has scrolled
-  const [filters, setFilters] = useState({
+  const [products, setProducts] = useState([]); // State to hold the list of products
+  const [loading, setLoading] = useState(true); // State to manage loading status
+  const wishlist = useSelector((state) => state.wishlist.items); // Selector to get wishlist items from Redux store
+  const dispatch = useDispatch(); // Dispatch hook to dispatch actions
+  const [modalVisible, setModalVisible] = useState(false); // State to manage visibility of login modal
+  const [hasScrolled, setHasScrolled] = useState(false); // State to track if the user has scrolled
+  const [filters, setFilters] = useState({ // State to hold the selected filter values
     category: "",
     brand: "",
     size: "",
     sort: "",
   });
 
-  // Get products from API
+  // Function to fetch products from the API
   const fetchProducts = async () => {
     try {
-      setLoading(true);
-      const response = await axios.get(import.meta.env.VITE_API_KEY);
-      setProducts(response.data);
+      setLoading(true); // Set loading to true before fetching
+      const response = await axios.get(import.meta.env.VITE_API_KEY); // Make API request using the API key
+      setProducts(response.data); // Set the products state with the response data
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching products:", error); // Log error if API request fails
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false once fetching is done
     }
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(); // Fetch products when the component mounts
   }, []);
 
+  // Function to reset the filter values to default (empty strings)
   const resetFilters = () => {
     setFilters({ category: "", brand: "", size: "", sort: "" });
   };
 
+  // Function to handle adding a product to the cart
   const handleAddToCart = (product) => {
-    const { id, imageUrl, title, price } = product;
-    dispatch(addProduct({ id, imageUrl, title, price, quantity: 1 }));
+    const { id, imageUrl, title, price } = product; // Destructure product properties
+    dispatch(addProduct({ id, imageUrl, title, price, quantity: 1 })); // Dispatch addProduct action to add item to cart
   };
 
+  // Function to toggle product's presence in the wishlist
   const toggleWishlist = (productId) => {
     if (wishlist.includes(productId)) {
-      dispatch(removeFromWishlist(productId));
+      dispatch(removeFromWishlist(productId)); // Remove from wishlist if it is already present
     } else {
-      dispatch(addToWishlist(productId));
+      dispatch(addToWishlist(productId)); // Add to wishlist if not already present
     }
   };
 
+  // Apply filters on the list of products
   const filteredProducts = products
     .filter(
       (product) =>
@@ -65,30 +69,31 @@ const AllProducts = () => {
         (filters.size === "" || product.size === filters.size)
     )
     .sort((a, b) => {
-      if (filters.sort === "lowToHigh") return a.price - b.price;
-      if (filters.sort === "highToLow") return b.price - a.price;
-      return 0;
+      if (filters.sort === "lowToHigh") return a.price - b.price; // Sort price from low to high
+      if (filters.sort === "highToLow") return b.price - a.price; // Sort price from high to low
+      return 0; // No sorting
     });
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!checkUserLoggedIn())
+      if (!checkUserLoggedIn()) // Check if user is logged in
         if (!hasScrolled) {
-          setModalVisible(true); // Show modal on first scroll
+          setModalVisible(true); // Show modal on first scroll if user is not logged in
           setHasScrolled(true); // Mark as scrolled to prevent future modals
         }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll); // Add scroll event listener to show modal on scroll
 
-    // Cleanup event listener
+    // Cleanup the event listener when the component unmounts
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [hasScrolled]);
 
+  // Function to close the modal
   const closeModal = () => {
-    setModalVisible(false); // Close the modal when the user clicks on the close button
+    setModalVisible(false); // Close the modal when the user clicks on 'Stay logged out'
   };
 
   return (
@@ -110,7 +115,7 @@ const AllProducts = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal to show when user scrolls without being logged in */}
       {modalVisible && (
         <div className="modal">
           <div className="modal-content">
@@ -133,6 +138,7 @@ const AllProducts = () => {
         </div>
       )}
 
+      {/* Filter section for sorting products */}
       <div className="filter mb-3">
         <label className="form-label me-3 mt-1">
           <b>Sort By:</b>
@@ -151,6 +157,7 @@ const AllProducts = () => {
       <div className="container-fluid" id="addProduct">
         <div className="special">
           <div className="row">
+            {/* Sidebar filter section for category, brand, and size */}
             <div className="col-lg-3">
               <div className="side border border-dark mb-1">
                 <h3>Category</h3>
@@ -213,6 +220,7 @@ const AllProducts = () => {
               </div>
             </div>
 
+            {/* Products Display */}
             <div className="col-lg-9">
               <div className="row d-flex justify-content-around">
                 {loading
@@ -235,6 +243,7 @@ const AllProducts = () => {
                       >
                         <div className="card bg-white h-100 allProduct text-dark">
                           <div className="card-body">
+                            {/* Wishlist icon */}
                             <div
                               className={`wishlist-icon ${
                                 wishlist.includes(product.id) ? "red" : "gray"
@@ -248,6 +257,7 @@ const AllProducts = () => {
                               )}
                             </div>
 
+                            {/* Product Details */}
                             <Link to={`/productdetail/${product.id}`}>
                               <LazyLoadImage
                                 src={product.imageUrl} // Image source

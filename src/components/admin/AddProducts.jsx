@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2"; // For error or success pop-up alerts
 
 function AddProducts() {
-  const navigate = useNavigate();
+  const navigate = useNavigate();  // Hook to navigate programmatically
   const [data, setData] = useState({
     title: "",
     category: "",
@@ -17,15 +17,15 @@ function AddProducts() {
     description: "",
   });
 
+  // Handle input changes and update the 'data' state
   const handleChange = (e) => {
-    // Update state based on input changes
     setData((prevData) => ({
       ...prevData,
-      [e.target.id]: e.target.value,
+      [e.target.id]: e.target.value, // Update the specific field based on ID
     }));
   };
 
-  // Set the category, brand, and size specifically
+  // Handle selection changes for category, brand, and size
   const handleSelectChange = (field) => (e) => {
     setData((prevData) => ({
       ...prevData,
@@ -33,21 +33,22 @@ function AddProducts() {
     }));
   };
 
+  // Extract product ID from URL params (if available)
   let { id } = useParams();
 
   useEffect(() => {
+    // If there's an 'id' in the URL, fetch the existing product details
     if (id) {
-      // Fetch existing product data for the given ID
       axios
         .get(`${import.meta.env.VITE_API_KEY}${id}`)
         .then((res) => {
-          setData(res.data);
+          setData(res.data); // Populate the form with fetched data
         })
         .catch((error) => {
           console.error("Error fetching product data:", error);
         });
     } else {
-      // Reset form data if no ID is provided
+      // Reset form data if there's no ID (for adding a new product)
       setData({
         title: "",
         category: "",
@@ -60,27 +61,29 @@ function AddProducts() {
         description: "",
       });
     }
-  }, [id]); // Run effect when 'id' changes
+  }, [id]); // Re-run effect when 'id' changes
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault(); // Prevent default form submission behavior
 
-    // Validate form fields
+    // Check if any form field is empty
     if (Object.values(data).some((field) => field.trim() === "")) {
       Swal.fire({
-        title: "Error!",
+        title: "Error!", // Show error if any field is missing
         text: "All fields are required!",
         icon: "error",
         confirmButtonText: "Ok",
       });
-      return;
+      return; // Stop the submission if validation fails
     }
 
+    // Decide whether to perform a POST or PUT request based on 'id'
     const request = id ? axios.put : axios.post;
     const endpoint = id
-      ? `${import.meta.env.VITE_API_KEY}${id}`
-      : import.meta.env.VITE_API_KEY;
+      ? `${import.meta.env.VITE_API_KEY}${id}` // Use ID if updating an existing product
+      : import.meta.env.VITE_API_KEY; // Use the base endpoint for adding a new product
 
+    // Send the data to the API
     request(endpoint, data)
       .then(() => {
         Swal.fire({
@@ -89,7 +92,7 @@ function AddProducts() {
           icon: "success",
           confirmButtonText: "Ok",
         });
-        // Reset form data
+        // Reset form data after successful submission
         setData({
           title: "",
           category: "",
@@ -101,7 +104,7 @@ function AddProducts() {
           size: "",
           description: "",
         });
-        navigate("/admin/addproducts")
+        navigate("/admin/addproducts");  // Redirect to the add products page
       })
       .catch((error) => {
         console.error(`Error ${id ? "updating" : "adding"} product:`, error);
@@ -281,7 +284,7 @@ function AddProducts() {
           <div className="row">
             <div className="col text-center">
               <button className="btn btn-success" type="submit">
-                {id ? "Update Product" : "Add Product"}
+                {id ? "Update Product" : "Add Product"} {/* Change button text based on whether it's add or edit */}
               </button>
             </div>
           </div>

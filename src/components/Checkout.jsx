@@ -4,23 +4,26 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { checkoutValidationSchema } from "./reuseable-code/ValidationSchemas"; //Import Validation Schema
 import { getRazorpayOptions } from "./reuseable-code/PaymentGateway"; //Import getRazorpayOptions function
 import { checkUserLoggedIn } from "./reuseable-code/CheckedLoggedIn"; //Import checkUserLoggedIn function
-import Loader from "./reuseable-code/Loader";
+import Loader from "./reuseable-code/Loader"; // Import a loader component to show loading state
 import Swal from "sweetalert2"; // For error or success pop-up alerts
 
 function Checkout() {
-  const cartProducts = useSelector((state) => state.cart.cartProducts); //To get cart products from redux store
+  // Getting cart products and userId from redux store
+  const cartProducts = useSelector((state) => state.cart.cartProducts);
   const userId = useSelector((state) => state.user.userId);
-  const [checked, setChecked] = useState(false); //For terms and condition
-  const location = useLocation(); //To accept temporary state
-  const finalAmount = location.state?.finalAmount;
-  const deliveryCharges = location.state?.deliveryCharges; //To accept delivery charges
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState({}); //For errors
-  const navigate = useNavigate();
-  const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
-  const [hasScrolled, setHasScrolled] = useState(false); // State to track if user has scrolled
 
-  //checkout object
+  // State hooks to manage form, errors, loading, and modal visibility
+  const [checked, setChecked] = useState(false); // For terms and conditions checkbox
+  const location = useLocation(); // To access temporary state passed through routing
+  const finalAmount = location.state?.finalAmount; // Final amount from previous page
+  const deliveryCharges = location.state?.deliveryCharges; // Delivery charges from previous page
+  const [loading, setLoading] = useState(false); // Loading state for Razorpay payment
+  const [error, setError] = useState({}); // To store validation errors
+  const navigate = useNavigate(); // Used to navigate to different pages programmatically
+  const [modalVisible, setModalVisible] = useState(false); // To control modal visibility
+  const [hasScrolled, setHasScrolled] = useState(false); // To check if user has scrolled
+
+  //Checkout form state
   const [checkout, setCheckout] = useState({
     countrySelect: "",
     firstname: "",
@@ -56,38 +59,39 @@ function Checkout() {
     });
   };
 
+  // Validation function for form data
   const validate = async () => {
     try {
       await checkoutValidationSchema().validate(checkout, {
         abortEarly: false,
-      });
-      setError({}); // Clear errors if validation passes
-      return true;
+      }); // Run schema validation
+      setError({}); // If validation passes, clear any previous errors
+      return true; // Return true if validation is successful
     } catch (err) {
       const errors = {};
       err.inner.forEach((error) => {
-        errors[error.path] = error.message;
+        errors[error.path] = error.message; // Map each error to the field
       });
-      setError(errors);
-      window.scrollTo(0, 0);
-      return false;
+      setError(errors); // Set errors to display them in the form
+      window.scrollTo(0, 0); // Scroll to top if validation fails
+      return false; // Return false if validation fails
     }
   };
 
+  // Handles Razorpay payment process
   const handlePayment = async () => {
-    //Checks all necessary things are availabel or not and proceed further
-    const isValid = await validate();
+    const isValid = await validate(); // Validate form before proceeding
     if (isValid) {
       if (!checked) {
         Swal.fire({
           title: "Error!",
-          text: "Please accept terms and conditions!",
+          text: "Please accept terms and conditions!", // Show error if terms not accepted
           icon: "error",
           confirmButtonText: "Ok",
         });
         window.scrollTo(0, 0);
       } else {
-        //RazorPay integration
+        // If everything is valid, proceed with Razorpay payment
         const options = getRazorpayOptions(
           userId,
           finalAmount,
@@ -97,13 +101,13 @@ function Checkout() {
           resetForm,
           setLoading
         );
-        var rzp1 = new window.Razorpay(options);
-        rzp1.open();
+        var rzp1 = new window.Razorpay(options); // Initialize Razorpay payment gateway
+        rzp1.open(); // Open Razorpay payment window
       }
     }
   };
 
-  //To reset form fields
+  // Reset the form fields after successful payment
   const resetForm = () => {
     setCheckout({
       countrySelect: "",
@@ -116,36 +120,39 @@ function Checkout() {
       email: "",
       phoneno: "",
     });
-    setChecked(false);
+    setChecked(false); // Uncheck terms and conditions
   };
 
+  // Show modal when the user scrolls for the first time
   useEffect(() => {
     const handleScroll = () => {
       if (!hasScrolled) {
         setModalVisible(true); // Show modal on first scroll
-        setHasScrolled(true); // Mark as scrolled to prevent future modals
+        setHasScrolled(true); // Mark as scrolled to prevent showing the modal again
       }
     };
 
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup event listener
+    // Cleanup event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [hasScrolled]);
 
+  // Close the modal
   const closeModal = () => {
-    setModalVisible(false); // Close the modal when the user clicks on the close button
+    setModalVisible(false);
   };
 
+  // Handle keyboard navigation between fields (using arrow keys)
   const handleKeyDown = (e, nextField, prevField) => {
     if (e.key === "ArrowDown") {
-      document.getElementById(nextField)?.focus(); // Move to next field
+      document.getElementById(nextField)?.focus(); // Move to next field on ArrowDown
     } else if (e.key === "ArrowUp") {
-      document.getElementById(prevField)?.focus(); // Move to previous field
+      document.getElementById(prevField)?.focus(); // Move to previous field on ArrowUp
     } else if (e.key === "Enter") {
-      handlePayment();
+      handlePayment(); // Trigger payment on Enter key press
     }
   };
   return (
@@ -204,6 +211,7 @@ function Checkout() {
           <div className="col-lg-8">
             <h3 className="fw-bold">Billing Details</h3>
             <form>
+              {/* Country */}
               <div className="mb-3">
                 <label className="form-label" htmlFor="countrySelect">
                   Select Country
@@ -231,6 +239,7 @@ function Checkout() {
                 )}
               </div>
 
+              {/* First Name and Last Name */}
               <div className="row mb-2">
                 <div className="col-lg-6 mb-3">
                   <label className="form-label" htmlFor="firstname">
@@ -280,6 +289,7 @@ function Checkout() {
                 </div>
               </div>
 
+              {/* Address */}
               <div className="mb-3">
                 <label className="form-label" htmlFor="address">
                   Address
@@ -303,6 +313,7 @@ function Checkout() {
                 )}
               </div>
 
+              {/*Town */}
               <div className="mb-3">
                 <label className="form-label" htmlFor="town">
                   Town or City
@@ -326,6 +337,7 @@ function Checkout() {
                 )}
               </div>
 
+              {/*State and Postal code */}
               <div className="row mb-2">
                 <div className="col-lg-6 mb-3">
                   <label className="form-label" htmlFor="state">
@@ -373,6 +385,7 @@ function Checkout() {
                 </div>
               </div>
 
+              {/*Email and Phone number */}
               <div className="row">
                 <div className="col-lg-6 mb-3">
                   <label className="form-label" htmlFor="email">
@@ -427,6 +440,7 @@ function Checkout() {
             <h3 className="fw-bold">Cart Total</h3>
             <div className="calculation">
               {cartProducts.map((product) => (
+                /* Product info., quantity and price*/
                 <div
                   className="d-flex justify-content-between "
                   key={product.id}
@@ -437,16 +451,22 @@ function Checkout() {
                   <h5>&#8377;{product.quantity * product.price}/-</h5>
                 </div>
               ))}
+
+              {/* Delivery charges*/}
               <div className="d-flex justify-content-between text-danger">
                 <h5>Delivery charges:</h5>
                 <h5>&#8377;{deliveryCharges}/-</h5>
               </div>
               <hr />
+
+              {/* Subtotal*/}
               <div className="d-flex justify-content-between">
                 <h5>Subtotal:</h5>
                 <h5>&#8377;{finalAmount}/-</h5>
               </div>
             </div>
+
+            {/*Terms and condition*/}
             <div className="mt-4">
               <div className="mt-5">
                 <input
@@ -463,6 +483,8 @@ function Checkout() {
                 <label htmlFor="term"> conditions</label>
               </div>
             </div>
+
+            {/*Order button */}
             <div className="text-center mt-4">
               <button onClick={handlePayment} className="btn btn-primary">
                 Place an order
