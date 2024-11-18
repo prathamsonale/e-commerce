@@ -30,6 +30,7 @@ import Users from "./components/user/Users";
 import MyAccount from "./components/user/MyAccount";
 import Admin from "./components/admin/Admin";
 import UserOrders from "./components/admin/UserOrders";
+import NotFound from "./components/NotFound";
 
 // App component
 function App() {
@@ -51,38 +52,54 @@ function App() {
         {/* Define routes for different pages */}
         <Routes>
           {/* Public Routes */}
+          {/* Catch-all route for undefined paths */}
+          <Route path="*" element={<NotFound />} />{" "}
+          {/* This will catch all invalid URLs */}
           <Route path="/" element={<Home />} /> {/* Home page */}
           <Route path="/cart" element={<Cart />} /> {/* Cart page */}
-          <Route path="/productdetail/:id" element={<ProductsDetail />} /> {/* Product details page */}
-          <Route path="/allproducts" element={<AllProducts />} /> {/* All products page */}
+          {/* Product details page */}
+          <Route path="/productdetail/:id" element={<ProductsDetail />} />{" "}
+          {/* All products page */}
+          <Route path="/allproducts" element={<AllProducts />} />{" "}
           <Route path="/men" element={<Men />} /> {/* Men category page */}
-          <Route path="/women" element={<Women />} /> {/* Women category page */}
+          {/* Women category page */}
+          <Route path="/women" element={<Women />} />{" "}
           <Route path="/contact" element={<Contact />} /> {/* Contact page */}
           <Route path="/about" element={<About />} /> {/* About page */}
-          <Route path="/thankyou" element={<ThankYouPage />} /> {/* Thank you page after checkout */}
-          <Route path="/adminlogin" element={<AdminLogin />} /> {/* Admin login page */}
-          <Route path="/checkout" element={<Checkout />} /> {/* Checkout page */}
+          {/* Thank you page after checkout */}
+          <Route path="/thankyou" element={<ThankYouPage />} />{" "}
+          {/* Admin login page */}
+          <Route path="/adminlogin" element={<AdminLogin />} />{" "}
+          {/* Checkout page */}
+          <Route path="/checkout" element={<Checkout />} />{" "}
           <Route path="userlogin" element={<Login />} /> {/* User login page */}
-          <Route path="usersignup" element={<SignUp />} /> {/* User sign up page */}
-
+          {/* User sign up page */}
+          <Route path="usersignup" element={<SignUp />} />{" "}
           {/* Nested routing for User related pages */}
           <Route path="users" element={<Users />}>
-            <Route path="dashboard" element={<UserDashboard />} /> {/* User Dashboard */}
+            <Route path="dashboard" element={<UserDashboard />} />{" "}
+            {/* User Dashboard */}
             <Route path="orders" element={<MyOrders />} /> {/* User Orders */}
-            <Route path="useraccount" element={<MyAccount />} /> {/* User Account page */}
+            {/* User Account page */}
+            <Route path="useraccount" element={<MyAccount />} />{" "}
           </Route>
-
           {/* Nested routing for Admin related pages */}
           <Route path="/admin" element={<Admin />}>
-            <Route path="dashboard" element={<Dashboard />} /> {/* Admin Dashboard */}
-            <Route path="addproducts" element={<AddProducts />} /> {/* Add New Product */}
-            <Route path="addproducts/:id" element={<AddProducts />} /> {/* Edit Product by ID */}
-            <Route path="products" element={<Products />} /> {/* View all products */}
-            <Route path="userdata" element={<UserData />} /> {/* View user data */}
-            <Route path="userorders" element={<UserOrders />} /> {/* Admin view of user orders */}
+            {/* Admin Dashboard */}
+            <Route path="dashboard" element={<Dashboard />} />{" "}
+            {/* Add New Product */}
+            <Route path="addproducts" element={<AddProducts />} />{" "}
+            {/* Edit Product by ID */}
+            <Route path="addproducts/:id" element={<AddProducts />} />{" "}
+            {/* View all products */}
+            <Route path="products" element={<Products />} />{" "}
+            {/* View user data */}
+            <Route path="userdata" element={<UserData />} />{" "}
+            {/* Admin view of user orders */}
+            <Route path="userorders" element={<UserOrders />} />{" "}
           </Route>
         </Routes>
-        
+
         {/* Footer component - common across all pages */}
         <Footer />
       </div>
