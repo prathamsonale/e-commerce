@@ -163,7 +163,7 @@ function Header() {
                       <div className="col sale-info">
                         <h3 className="default-info">
                           <a href="/nothing">
-                            25% off (Almost) Everything! Use Code: Summer Sale
+                            25% off (Almost) Everything! Use Code: Summer sale
                           </a>
                         </h3>
                         <h3 className="hidden-info">Hurry up!</h3>
