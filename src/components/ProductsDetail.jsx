@@ -71,7 +71,6 @@ function ProductsDetail() {
       {product && (
         <div className="container productDetail mt-3">
           <div className="row">
-            <p className="fw-bold">Product Details</p>
             <div className="col-lg-6 col-md-12 text-center">
               <img src={product.imageUrl} alt={product.title} />{" "}
               {/* Product Image */}

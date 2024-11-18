@@ -152,7 +152,7 @@ function Header() {
             </div>
           </nav>
         </div>
-        
+
         <div className="sale">
           <div className="container">
             <div className="row">
