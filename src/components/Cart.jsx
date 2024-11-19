@@ -216,7 +216,7 @@ function Cart() {
                     <h5>&#8377;{delivery}/-</h5>
                   </div>
                   <div className="d-flex justify-content-between">
-                    <h5>Discount:</h5>
+                    <h5>Discount Amount:</h5>
                     <h5>&#8377;{discount}/-</h5>
                   </div>
                   <hr />
