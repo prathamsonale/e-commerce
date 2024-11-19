@@ -40,10 +40,15 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
+    // Set loading state with a delay
+    const timer = setTimeout(() => {
       setLoading(false);
     }, 2000);
-  });
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []); // This effect only runs once
 
   // Effect hook to scroll to top of the page on route change
   useEffect(() => {
