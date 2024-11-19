@@ -2,7 +2,7 @@
 import "./assets/style.css"; // Custom CSS styles
 import "@fortawesome/fontawesome-free/css/all.min.css"; // FontAwesome icons
 import { Route, Routes, useLocation } from "react-router-dom"; // React Router for handling routing
-import { useEffect } from "react"; // Hook for handling side-effects
+import { useEffect, useState } from "react"; // Hook for handling side-effects
 
 // Importing all components
 import Home from "./components/Home";
@@ -37,6 +37,14 @@ function App() {
   // Hook to get the current location for scroll management
   const location = useLocation();
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  });
+
   // Effect hook to scroll to top of the page on route change
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -44,65 +52,79 @@ function App() {
 
   return (
     <>
-      {/* Header component - common across all pages */}
-      <Header />
+      {loading ? (
+        <div id="main-page">
+          <h1>CoolFootwear</h1>
+        </div>
+      ) : (
+        <>
+          {/* Header component - common across all pages */}
+          <Header />
 
-      {/* Main content wrapper */}
-      <div className="content-wrapper">
-        {/* Define routes for different pages */}
-        <Routes>
-          {/* Public Routes */}
-          {/* Catch-all route for undefined paths */}
-          <Route path="*" element={<NotFound />} />{" "}
-          {/* This will catch all invalid URLs */}
-          <Route path="/" element={<Home />} /> {/* Home page */}
-          <Route path="/cart" element={<Cart />} /> {/* Cart page */}
-          {/* Product details page */}
-          <Route path="/productdetail/:id" element={<ProductsDetail />} />{" "}
-          {/* All products page */}
-          <Route path="/allproducts" element={<AllProducts />} />{" "}
-          <Route path="/men" element={<Men />} /> {/* Men category page */}
-          {/* Women category page */}
-          <Route path="/women" element={<Women />} />{" "}
-          <Route path="/contact" element={<Contact />} /> {/* Contact page */}
-          <Route path="/about" element={<About />} /> {/* About page */}
-          {/* Thank you page after checkout */}
-          <Route path="/thankyou" element={<ThankYouPage />} />{" "}
-          {/* Admin login page */}
-          <Route path="/adminlogin" element={<AdminLogin />} />{" "}
-          {/* Checkout page */}
-          <Route path="/checkout" element={<Checkout />} />{" "}
-          <Route path="userlogin" element={<Login />} /> {/* User login page */}
-          {/* User sign up page */}
-          <Route path="usersignup" element={<SignUp />} />{" "}
-          {/* Nested routing for User related pages */}
-          <Route path="users" element={<Users />}>
-            <Route path="dashboard" element={<UserDashboard />} />{" "}
-            {/* User Dashboard */}
-            <Route path="orders" element={<MyOrders />} /> {/* User Orders */}
-            {/* User Account page */}
-            <Route path="useraccount" element={<MyAccount />} />{" "}
-          </Route>
-          {/* Nested routing for Admin related pages */}
-          <Route path="/admin" element={<Admin />}>
-            {/* Admin Dashboard */}
-            <Route path="dashboard" element={<Dashboard />} />{" "}
-            {/* Add New Product */}
-            <Route path="addproducts" element={<AddProducts />} />{" "}
-            {/* Edit Product by ID */}
-            <Route path="addproducts/:id" element={<AddProducts />} />{" "}
-            {/* View all products */}
-            <Route path="products" element={<Products />} />{" "}
-            {/* View user data */}
-            <Route path="userdata" element={<UserData />} />{" "}
-            {/* Admin view of user orders */}
-            <Route path="userorders" element={<UserOrders />} />{" "}
-          </Route>
-        </Routes>
+          {/* Main content wrapper */}
+          <div className="content-wrapper">
+            {/* Define routes for different pages */}
+            <Routes>
+              {/* Public Routes */}
+              {/* Catch-all route for undefined paths */}
+              <Route path="*" element={<NotFound />} />{" "}
+              {/* This will catch all invalid URLs */}
+              <Route path="/" element={<Home />} /> {/* Home page */}
+              <Route path="/cart" element={<Cart />} /> {/* Cart page */}
+              {/* Product details page */}
+              <Route
+                path="/productdetail/:id"
+                element={<ProductsDetail />}
+              />{" "}
+              {/* All products page */}
+              <Route path="/allproducts" element={<AllProducts />} />{" "}
+              <Route path="/men" element={<Men />} /> {/* Men category page */}
+              {/* Women category page */}
+              <Route path="/women" element={<Women />} />{" "}
+              <Route path="/contact" element={<Contact />} />{" "}
+              {/* Contact page */}
+              <Route path="/about" element={<About />} /> {/* About page */}
+              {/* Thank you page after checkout */}
+              <Route path="/thankyou" element={<ThankYouPage />} />{" "}
+              {/* Admin login page */}
+              <Route path="/adminlogin" element={<AdminLogin />} />{" "}
+              {/* Checkout page */}
+              <Route path="/checkout" element={<Checkout />} />{" "}
+              <Route path="userlogin" element={<Login />} />{" "}
+              {/* User login page */}
+              {/* User sign up page */}
+              <Route path="usersignup" element={<SignUp />} />{" "}
+              {/* Nested routing for User related pages */}
+              <Route path="users" element={<Users />}>
+                <Route path="dashboard" element={<UserDashboard />} />{" "}
+                {/* User Dashboard */}
+                <Route path="orders" element={<MyOrders />} />{" "}
+                {/* User Orders */}
+                {/* User Account page */}
+                <Route path="useraccount" element={<MyAccount />} />{" "}
+              </Route>
+              {/* Nested routing for Admin related pages */}
+              <Route path="/admin" element={<Admin />}>
+                {/* Admin Dashboard */}
+                <Route path="dashboard" element={<Dashboard />} />{" "}
+                {/* Add New Product */}
+                <Route path="addproducts" element={<AddProducts />} />{" "}
+                {/* Edit Product by ID */}
+                <Route path="addproducts/:id" element={<AddProducts />} />{" "}
+                {/* View all products */}
+                <Route path="products" element={<Products />} />{" "}
+                {/* View user data */}
+                <Route path="userdata" element={<UserData />} />{" "}
+                {/* Admin view of user orders */}
+                <Route path="userorders" element={<UserOrders />} />{" "}
+              </Route>
+            </Routes>
 
-        {/* Footer component - common across all pages */}
-        <Footer />
-      </div>
+            {/* Footer component - common across all pages */}
+            <Footer />
+          </div>
+        </>
+      )}
     </>
   );
 }
