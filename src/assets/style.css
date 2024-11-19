@@ -643,6 +643,12 @@ a {
   .modal .modal-content {
     width: 350px;
   }
+
+  /*App.jsx*/
+
+  #main-page h1 {
+    font-size: 50px !important;
+  }
 }
 
 /*==============================================================================================================================================================================================*/
@@ -1982,6 +1988,11 @@ UserOrders component style end
     /* Force two items per row with equal width */
     width: 100%; /* 2 items per row */
   }
+
+  /*App.jsx*/
+  #main-page h1 {
+    font-size: 100px !important;
+  }
 }
 
 /* Custom media query for screens between 768px and 1145px */
@@ -2042,6 +2053,11 @@ UserOrders component style end
   .col-md-6 {
     /* Ensure proper layout for medium screens */
     width: 50%; /* 2 items per row */
+  }
+
+  /*App.jsx*/
+  #main-page h1 {
+    font-size: 150px !important;
   }
 }
 
@@ -2133,7 +2149,7 @@ UserOrders component style end
 
 /* Skeleton Styles for Men Page and AllProducts page end */
 
-/*NotFound Comp. style start*/
+/*NotFound Component. style start*/
 .notfound-container {
   display: flex;
   justify-content: center;
@@ -2198,7 +2214,7 @@ UserOrders component style end
     opacity: 0;
   }
   100% {
-    opacity: 1; 
+    opacity: 1;
   }
 }
 
@@ -2256,3 +2272,41 @@ UserOrders component style end
 }
 
 /*NotFound Comp. style end*/
+
+/*=================================================================*/
+
+/*App Component style start*/
+#main-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f8be06;
+  background-image: url("https://i.postimg.cc/7YBD474N/freepik-candid-image-photography-natural-textures-highly-r-26208.jpg");
+  background-size: cover;
+  background-position: center;
+}
+#main-page h1 {
+  font-family: cursive;
+  font-size: 200px;
+  color: #ffffff;
+  text-shadow: 7px 7px 0px #fbc531, 15px 15px 0px #a37c13;
+  opacity: 0; /* Start with hidden text */
+  transform: translateY(50px); /* Start position, below the normal flow */
+  animation: fadeInUp 2s ease-out forwards; /* Apply the animation */
+}
+
+/* Keyframes for fade-in and moving up animation */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px); /* Start from below */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* End at normal position */
+  }
+}
+
+/*App Component style end*/
