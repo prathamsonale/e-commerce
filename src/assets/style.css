@@ -1499,6 +1499,13 @@ Header component style start
   flex: 1;
   text-align: center;
 }
+#cart .column .text-combine {
+  white-space: nowrap; /* Prevents the text from wrapping to a new line */
+  overflow: hidden; /* Hides the overflowing text */
+  text-overflow: ellipsis; /* Adds the ellipsis (...) */
+  width: 200px;
+  text-align: center !important;
+}
 
 #cart .column h5 {
   margin: 0;

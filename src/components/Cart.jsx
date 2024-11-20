@@ -147,7 +147,7 @@ function Cart() {
                 </div>
               </div>
               <div className="column">
-                <h5>{product.title}</h5>
+                <h5 className="text-combine">{product.title}</h5>
               </div>
               <div className="column">
                 <h5>
