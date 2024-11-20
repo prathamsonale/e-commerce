@@ -146,7 +146,7 @@ function Cart() {
                   </Link>
                 </div>
               </div>
-              <div className="column">
+              <div className="column d-flex justify-content-center align-items-center">
                 <h5 className="text-combine">{product.title}</h5>
               </div>
               <div className="column">
