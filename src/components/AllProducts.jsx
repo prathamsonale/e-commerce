@@ -1,11 +1,11 @@
-import axios from "axios"; 
-import React, { useEffect, useState } from "react"; 
-import { Link } from "react-router-dom"; 
-import { useDispatch, useSelector } from "react-redux"; 
-import { addProduct } from "../redux/cart/cartSlice"; 
-import { addToWishlist, removeFromWishlist } from "../redux/cart/wishlistslice"; 
-import { checkUserLoggedIn } from "./reuseable-code/CheckedLoggedIn"; 
-import AllProductsSkeletonLoader from "./reuseable-code/AllProductsSkeletonLoader"; 
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from "../redux/cart/cartSlice";
+import { addToWishlist, removeFromWishlist } from "../redux/cart/wishlistslice";
+import { checkUserLoggedIn } from "./reuseable-code/CheckedLoggedIn";
+import AllProductsSkeletonLoader from "./reuseable-code/AllProductsSkeletonLoader";
 import { LazyLoadImage } from "react-lazy-load-image-component"; // Import LazyLoadImage for optimized image loading
 import "react-lazy-load-image-component/src/effects/blur.css"; // Import blur effect during image load
 
@@ -16,7 +16,11 @@ const AllProducts = () => {
   const dispatch = useDispatch(); // Dispatch hook to dispatch actions
   const [modalVisible, setModalVisible] = useState(false); // State to manage visibility of login modal
   const [hasScrolled, setHasScrolled] = useState(false); // State to track if the user has scrolled
-  const [filters, setFilters] = useState({ // State to hold the selected filter values
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageRange, setPageRange] = useState([1, 10]); // Page range (1-10, 11-20, etc.)
+  const [filters, setFilters] = useState({
+    // State to hold the selected filter values
     category: "",
     brand: "",
     size: "",
@@ -28,7 +32,10 @@ const AllProducts = () => {
     try {
       setLoading(true); // Set loading to true before fetching
       const response = await axios.get(import.meta.env.VITE_API_KEY); // Make API request using the API key
-      setProducts(response.data); // Set the products state with the response data
+      if (response && response.data) {
+        setProducts(response.data); // Set the products state with the response data
+        setTotalPages(Math.ceil(response.data.length / 12)); // Use Math.ceil to round up the total pages
+      }
     } catch (error) {
       console.error("Error fetching products:", error); // Log error if API request fails
     } finally {
@@ -38,7 +45,17 @@ const AllProducts = () => {
 
   useEffect(() => {
     fetchProducts(); // Fetch products when the component mounts
-  }, []);
+    window.scrollTo(0, 0);
+  }, [page]);
+
+  const selectPageHandler = (selectedPage) => {
+    if (
+      selectedPage >= 1 &&
+      selectedPage <= totalPages &&
+      selectedPage !== page
+    )
+      setPage(selectedPage);
+  };
 
   // Function to reset the filter values to default (empty strings)
   const resetFilters = () => {
@@ -74,10 +91,41 @@ const AllProducts = () => {
       return 0; // No sorting
     });
 
+  // Apply pagination after filtering
+  const displayedProducts = filteredProducts.slice((page - 1) * 12, page * 12);
+
+  // Update page range based on the current page
+  const updatePageRange = (currentPage) => {
+    const startPage = Math.floor((currentPage - 1) / 12) * 12 + 1;
+    const endPage = Math.min(startPage + 9, totalPages);
+    setPageRange([startPage, endPage]);
+  };
+
+  useEffect(() => {
+    updatePageRange(page); // Update the range whenever the page changes
+    window.scrollTo(0, 0);
+  }, [page, totalPages]);
+
+  // Next and Previous for page ranges
+  const goToNextRange = () => {
+    const newStartPage = pageRange[1] + 1;
+    if (newStartPage <= totalPages) {
+      setPage(newStartPage);
+    }
+  };
+
+  const goToPreviousRange = () => {
+    const newStartPage = pageRange[0] - 12;
+    if (newStartPage > 0) {
+      setPage(newStartPage);
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
-      if (!checkUserLoggedIn()) // Check if user is logged in
+      if (!checkUserLoggedIn())
         if (!hasScrolled) {
+          // Check if user is logged in
           setModalVisible(true); // Show modal on first scroll if user is not logged in
           setHasScrolled(true); // Mark as scrolled to prevent future modals
         }
@@ -235,8 +283,8 @@ const AllProducts = () => {
                           <AllProductsSkeletonLoader />
                         </div>
                       ))
-                  : filteredProducts.length > 0 &&
-                    filteredProducts.map((product, index) => (
+                  : displayedProducts.length > 0 &&
+                    displayedProducts.map((product, index) => (
                       <div
                         key={index}
                         className="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex justify-content-center align-items-center"
@@ -291,6 +339,50 @@ const AllProducts = () => {
                       </div>
                     ))}
               </div>
+              {/* Pagination Controls */}
+              {displayedProducts.length > 0 && (
+                <div className="pagination">
+                  {/* Previous Range Button */}
+                  <span
+                    onClick={goToPreviousRange}
+                    className={pageRange[0] > 1 ? "" : "pagination__disabled"}
+                  >
+                    Previous
+                  </span>
+                  <span
+                    onClick={() => selectPageHandler(page - 1)}
+                    className={page > 1 ? "" : "pagination__disabled"}
+                  >
+                    ◀️
+                  </span>
+                  {[...Array(totalPages)].map((_, i) => {
+                    return (
+                      <span
+                        className={page === i + 1 ? "pagination__selected" : ""}
+                        onClick={() => selectPageHandler(i + 1)}
+                        key={i}
+                      >
+                        {i + 1}
+                      </span>
+                    );
+                  })}
+                  <span
+                    className={page < totalPages ? "" : "pagination__disabled"}
+                    onClick={() => selectPageHandler(page + 1)}
+                  >
+                    ▶️
+                  </span>
+                  {/* Next Range Button */}
+                  <span
+                    onClick={goToNextRange}
+                    className={
+                      pageRange[1] < totalPages ? "" : "pagination__disabled"
+                    }
+                  >
+                    Next
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>
