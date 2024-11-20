@@ -2315,6 +2315,7 @@ UserOrders component style end
   margin: 15px 0;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .pagination > span {
@@ -2323,13 +2324,17 @@ UserOrders component style end
   cursor: pointer;
 }
 
+@media (max-width: 768px) {
+  .pagination > span {
+    padding: 8px 10px;
+  }
+}
 .pagination__selected {
   background-color: rgb(220, 220, 220);
 }
 
 .pagination__disabled {
-  opacity: 0;
-  cursor: default !important;
+  display: none;
 }
 
 /*App Component style end*/
