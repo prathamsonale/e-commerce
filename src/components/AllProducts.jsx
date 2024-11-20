@@ -49,11 +49,13 @@ const AllProducts = () => {
   }, [page]);
 
   const selectPageHandler = (selectedPage) => {
+    // Check if the selected page is within the valid range and not the current page
     if (
-      selectedPage >= 1 &&
-      selectedPage <= totalPages &&
-      selectedPage !== page
+      selectedPage >= 1 && // The selected page must be at least 1
+      selectedPage <= totalPages && // The selected page must not exceed the total number of pages
+      selectedPage !== page // The selected page must be different from the current page
     )
+      // If the conditions are met, update the current page state
       setPage(selectedPage);
   };
 
@@ -96,28 +98,50 @@ const AllProducts = () => {
 
   // Update page range based on the current page
   const updatePageRange = (currentPage) => {
-    const startPage = Math.floor((currentPage - 1) / 12) * 12 + 1;
+    // Calculate the starting page of the range
+    // - Subtract 1 from currentPage to make it 0-based
+    // - Divide by 10 to determine the block of pages (each block has 10 pages)
+    // - Multiply by 10 to get the starting page of the block
+    // - Add 1 to make the starting page 1-based
+    const startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
+
+    // Calculate the ending page of the range
+    // - Add 9 to the startPage to get a range of 10 pages (startPage to startPage + 9)
+    // - Ensure the end page doesn't exceed totalPages by using Math.min
     const endPage = Math.min(startPage + 9, totalPages);
+
+    // Set the calculated page range (from startPage to endPage)
     setPageRange([startPage, endPage]);
   };
 
+  // useEffect to update page range and scroll to top whenever the page or totalPages changes
   useEffect(() => {
-    updatePageRange(page); // Update the range whenever the page changes
-    window.scrollTo(0, 0);
-  }, [page, totalPages]);
+    // Update the page range whenever the current page changes
+    updatePageRange(page);
 
-  // Next and Previous for page ranges
+    // Scroll the window to the top to ensure the user sees the top of the page range
+    window.scrollTo(0, 0);
+  }, [page, totalPages]); // Dependencies: this effect runs whenever 'page' or 'totalPages' changes
+
+  // Function to go to the next page range (next 10 pages)
   const goToNextRange = () => {
+    // Calculate the starting page for the next range (one page after the last page in the current range)
     const newStartPage = pageRange[1] + 1;
+
+    // If the new start page is within the valid range (not exceeding totalPages), update the current page
     if (newStartPage <= totalPages) {
-      setPage(newStartPage);
+      setPage(newStartPage); // Set the new page
     }
   };
 
+  // Function to go to the previous page range (previous 10 pages)
   const goToPreviousRange = () => {
+    // Calculate the starting page for the previous range (10 pages before the current start page)
     const newStartPage = pageRange[0] - 12;
+
+    // If the new start page is greater than 0, update the current page
     if (newStartPage > 0) {
-      setPage(newStartPage);
+      setPage(newStartPage); // Set the new page
     }
   };
 
