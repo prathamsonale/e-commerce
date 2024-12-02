@@ -1,8 +1,7 @@
 <p align="center">
   <img src="https://i.postimg.cc/cHSVgfM3/images-removebg-preview-modified.png" alt="website logo" height="80px" width="80px"/>
   <br />
-  <img src="https://i.postimg.cc/cJ3JNqcc/png-clipart-web-development-web-design-internet-web-hosting-service-world-wide-web-logo-symmetry-rem.png" alt="web icon" height="8px" />
-  
+  <img src="https://static.vecteezy.com/system/resources/previews/003/731/316/non_2x/web-icon-line-on-white-background-image-for-web-presentation-logo-icon-symbol-free-vector.jpg" alt="web icon" height="8px" />
   <a href="https://coolfootwearproject.netlify.app/" target="_blank"><strong>Website</strong></a>
 </p>
 
