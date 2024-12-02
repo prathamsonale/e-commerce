@@ -3,6 +3,8 @@
 </p>
 <p align="center">
   [**Website**](https://coolfootwearproject.netlify.app/)
+[**Live Preview**](https://coolfootwearproject.netlify.app/)
+  
 </p>
 
 <h1 align="center">CoolFootwear - E-commerce Platform</h1>
