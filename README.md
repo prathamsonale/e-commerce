@@ -108,29 +108,7 @@ Feel free to contribute by submitting issues or creating pull requests. Here are
 
 Here’s a quick overview of the project structure:
 
-Coolfootwear-Project/
-│
-├── node_modules/             # Contains all the npm packages and dependencies for the project
-│
-├── public/                   # Static files that are publicly accessible (e.g., images, icons, fonts, etc.)
-│   └── index.html            # The main HTML file, where the root div and other static content reside
-│
-├── src/                     
-│   ├── assets/               # Contains static assets like images, icons, and other media files
-│   ├── components/           # Reusable React components such as Navbar, Footer, ProductCard, etc.
-│   ├── redux/                # Redux store, slices, actions, and reducers for state management
-│   ├── App.jsx               # Main component that renders other components and handles routing
-│   └── main.jsx              # Entry point for React app, where the App component is rendered into the DOM
-│
-├── .env                      # Environment variables for configuration, e.g., API keys, URLs, etc.
-├── .gitignore                # List of files/folders that should be ignored by git (e.g., node_modules, build folders)
-├── eslint.config.js          # Configuration for ESLint (JavaScript linting tool) to ensure code quality
-├── index.html                # Main HTML file, typically serves as the entry point for the app in the browser
-├── netlify.toml              # Configuration for deploying the app on Netlify (build settings, redirects, etc.)
-├── package-lock.json         # Automatically generated file that locks the versions of npm dependencies
-├── package.json              # Project's metadata, dependencies, scripts, and configurations
-├── README.md                 # The README file you're reading (this one!), with project information
-└── vite.config.js            # Configuration file for Vite, a fast build tool used for the React app
+![Screenshot 2024-12-02 233648](https://github.com/user-attachments/assets/2d3894f0-f7d7-4da9-a93d-11a972bce64d)
 
 ---
 
