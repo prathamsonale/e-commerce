@@ -100,7 +100,7 @@ Feel free to contribute by submitting issues or creating pull requests. Here are
 - Redux
 - MockAPI
 - Netlify
-- 
+  
 ---
 
 ## Project Structure
