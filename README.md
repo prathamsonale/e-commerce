@@ -1,11 +1,9 @@
 <p align="center">
-  <img src="https://i.postimg.cc/cHSVgfM3/images-removebg-preview-modified.png" alt="CoolFootwear Website Logo" style="border-radius: 30%; height: 80px; width: 80px;"/>
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsPXxG3rWPKdWAPL0e71wAWA-tmB5Ezwl26g&s" alt="web icon" height="40px" /> 
+  <br />
+  <a href="https://coolfootwearproject.netlify.app/" target="_blank"><strong>Website</strong></a>
 </p>
-<p align="center">
-  [**Website**](https://coolfootwearproject.netlify.app/)
-[**Live Preview**](https://coolfootwearproject.netlify.app/)
-  
-</p>
+
 
 <h1 align="center">CoolFootwear - E-commerce Platform</h1>
 
