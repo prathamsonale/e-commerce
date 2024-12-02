@@ -2,7 +2,7 @@
   <img src="https://coolfootwearproject.netlify.app/assets/images-removebg-preview-CJa-0H3v.png" alt="CoolFootwear Website Logo" style="border-radius: 30%; height: 80px; width: 80px;"/>
 </p>
 
-<h1 aling="center">CoolFootwear - E-commerce Platform</h1>
+<h1 align="center">CoolFootwear - E-commerce Platform</h1>
 
 Welcome to **CoolFootwear**, a modern e-commerce platform built with React that provides a seamless shopping experience with essential functionalities like adding products to the cart, user authentication, payment integration, admin controls, and much more! This project is designed for optimal performance and user experience, featuring a responsive design, state management with Redux, and secure handling of data.
 
