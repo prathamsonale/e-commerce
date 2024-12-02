@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="https://coolfootwearproject.netlify.app/assets/images-removebg-preview-CJa-0H3v.png" alt="CoolFootwear Website Logo" style="border-radius: 30%; height: 80px; width: 80px;"/>
+  <img src="![images-removebg-preview-modified](https://github.com/user-attachments/assets/afad2d3e-659a-49ce-90af-deb86a9c3c10)
+" alt="CoolFootwear Website Logo" style="border-radius: 30%; height: 80px; width: 80px;"/>
 </p>
 
 <h1 align="center">CoolFootwear - E-commerce Platform</h1>
