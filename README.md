@@ -1,8 +1,8 @@
 <p align="center">
   <img src="https://i.postimg.cc/cHSVgfM3/images-removebg-preview-modified.png" alt="website logo" height="80px" width="80px"/>
   <br />
-<!--   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsPXxG3rWPKdWAPL0e71wAWA-tmB5Ezwl26g&s" alt="web icon" height="8px" /> -->
-  <i class="fa-solid fa-earth-americas"></i>
+  <img src="https://i.postimg.cc/cJ3JNqcc/png-clipart-web-development-web-design-internet-web-hosting-service-world-wide-web-logo-symmetry-rem.png" alt="web icon" height="8px" />
+  
   <a href="https://coolfootwearproject.netlify.app/" target="_blank"><strong>Website</strong></a>
 </p>
 
