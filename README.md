@@ -84,6 +84,7 @@ Once the dependencies are installed, start the React development server:
 
 - npm run dev
 
+---
 
 ### Contributing
 
