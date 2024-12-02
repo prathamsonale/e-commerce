@@ -34,7 +34,7 @@ Welcome to **CoolFootwear**, a modern e-commerce platform built with React that 
 
 You can view the live version of the CoolFootwear application deployed on **Netlify**:
 
-[**Live Preview**]([https://coolfootwear.netlify.app](https://coolfootwearproject.netlify.app/))
+[**Live Preview**](https://coolfootwearproject.netlify.app/)
 
 ---
 
