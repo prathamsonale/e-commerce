@@ -93,6 +93,7 @@ Feel free to contribute by submitting issues or creating pull requests. Here are
 - Report bugs
 - Suggest new features
 
+---
 
 ### Acknowledgements
 
