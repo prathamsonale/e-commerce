@@ -1,8 +1,7 @@
 <p align="center">
   <img src="https://i.postimg.cc/cHSVgfM3/images-removebg-preview-modified.png" alt="website logo" height="80px" width="80px"/>
   <br />
-  <img src="https://static.vecteezy.com/system/resources/previews/003/731/316/non_2x/web-icon-line-on-white-background-image-for-web-presentation-logo-icon-symbol-free-vector.jpg" alt="web icon" height="20px" />
-  <a href="https://coolfootwearproject.netlify.app/" target="_blank"><strong>Website</strong></a>
+  <a href="https://coolfootwearproject.netlify.app/" target="_blank"><strong>Live Preview</strong></a>
 </p>
 
 
@@ -35,14 +34,6 @@ Welcome to **CoolFootwear**, a modern e-commerce platform built with React that 
 - **Local Storage**: Cart data and other temporary information are stored locally on the user's browser.
  
 - **Security**: Sensitive information such as tokens and authentication details are stored in cookies with secure configurations.
-
----
-
-## Live Preview
-
-You can view the live version of the CoolFootwear application deployed on **Netlify**:
-
-[**Live Preview**](https://coolfootwearproject.netlify.app/)
 
 ---
 
