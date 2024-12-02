@@ -58,7 +58,7 @@ You can view the live version of the CoolFootwear application deployed on **Netl
  
 - **Cookies** - For storing authentication tokens securely.
  
-- **Much more...
+- **and much more...**
 
 ---
 
