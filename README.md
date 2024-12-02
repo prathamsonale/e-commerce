@@ -73,6 +73,7 @@ git clone https://github.com/RutvikKumbhar90/CoolFootwear-Project.git
 ### 2. Install Dependencies
 
 Navigate to the project directory and install the required dependencies:
+
 cd coolfootwear
 npm install
 
@@ -80,6 +81,7 @@ npm install
 ### 3. Start the Development Server
 
 Once the dependencies are installed, start the React development server:
+
 npm run dev
 
 
