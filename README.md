@@ -73,7 +73,7 @@ To set up the project locally, follow these steps:
 
 Navigate to the project directory and install the required dependencies:
 
-- cd coolfootwear
+- cd CoolFootwear-Project
 - npm install
 
 
