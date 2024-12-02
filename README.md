@@ -86,7 +86,7 @@ Once the dependencies are installed, start the React development server:
 
 ---
 
-### Contributing
+## Contributing
 
 Feel free to contribute by submitting issues or creating pull requests. Here are a few ways you can help:
 
@@ -95,7 +95,7 @@ Feel free to contribute by submitting issues or creating pull requests. Here are
 
 ---
 
-### Acknowledgements
+## Acknowledgements
 
 - React
 - Redux
@@ -104,9 +104,7 @@ Feel free to contribute by submitting issues or creating pull requests. Here are
 - 
 ---
 
-### Project Structure
-<hr/>
-
+## Project Structure
 
 Here’s a quick overview of the project structure:
 
