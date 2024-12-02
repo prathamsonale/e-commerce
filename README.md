@@ -105,6 +105,8 @@ Feel free to contribute by submitting issues or creating pull requests. Here are
 ---
 
 ### Project Structure
+<hr/>
+
 
 Here’s a quick overview of the project structure:
 
