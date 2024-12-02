@@ -68,7 +68,7 @@ To set up the project locally, follow these steps:
 
 ### 1. Clone the repository
 
-git clone https://github.com/your-username/coolfootwear.git
+git clone https://github.com/RutvikKumbhar90/CoolFootwear-Project.git
 
 ### 2. Install Dependencies
 
