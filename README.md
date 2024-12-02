@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://coolfootwearproject.netlify.app/assets/images-removebg-preview-CJa-0H3v.png" alt="CoolFootwear Website Logo" style="border-radius: 15px;" height="15px"/>
+  <img src="https://coolfootwearproject.netlify.app/assets/images-removebg-preview-CJa-0H3v.png" alt="CoolFootwear Website Logo" style="border-radius: 15px; height: 80px; width: 80px;"/>
 </p>
 <h1 aling="center">CoolFootwear - E-commerce Platform</h1>
 
