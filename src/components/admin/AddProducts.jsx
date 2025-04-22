@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2"; // For error or success pop-up alerts
+import Swal from "sweetalert2";
 
 function AddProducts() {
-  const navigate = useNavigate();  // Hook to navigate programmatically
+  const navigate = useNavigate();
   const [data, setData] = useState({
     title: "",
     category: "",
@@ -17,15 +17,13 @@ function AddProducts() {
     description: "",
   });
 
-  // Handle input changes and update the 'data' state
   const handleChange = (e) => {
     setData((prevData) => ({
       ...prevData,
-      [e.target.id]: e.target.value, // Update the specific field based on ID
+      [e.target.id]: e.target.value,
     }));
   };
 
-  // Handle selection changes for category, brand, and size
   const handleSelectChange = (field) => (e) => {
     setData((prevData) => ({
       ...prevData,
@@ -33,22 +31,19 @@ function AddProducts() {
     }));
   };
 
-  // Extract product ID from URL params (if available)
   let { id } = useParams();
 
   useEffect(() => {
-    // If there's an 'id' in the URL, fetch the existing product details
     if (id) {
       axios
         .get(`${import.meta.env.VITE_API_KEY}${id}`)
         .then((res) => {
-          setData(res.data); // Populate the form with fetched data
+          setData(res.data);
         })
         .catch((error) => {
           console.error("Error fetching product data:", error);
         });
     } else {
-      // Reset form data if there's no ID (for adding a new product)
       setData({
         title: "",
         category: "",
@@ -61,30 +56,34 @@ function AddProducts() {
         description: "",
       });
     }
-  }, [id]); // Re-run effect when 'id' changes
+  }, [id]);
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
 
-    // Check if any form field is empty
-    if (Object.values(data).some((field) => field.trim() === "")) {
+    if (Object.values(data).some((field) => String(field).trim() === "")) {
       Swal.fire({
-        title: "Error!", // Show error if any field is missing
+        title: "Error!",
         text: "All fields are required!",
         icon: "error",
         confirmButtonText: "Ok",
       });
-      return; // Stop the submission if validation fails
+      return;
     }
 
-    // Decide whether to perform a POST or PUT request based on 'id'
+    // Capitalize brand name for consistency
+    const normalizedData = {
+      ...data,
+      brand:
+        data.brand.charAt(0).toUpperCase() + data.brand.slice(1).toLowerCase(),
+    };
+
     const request = id ? axios.put : axios.post;
     const endpoint = id
-      ? `${import.meta.env.VITE_API_KEY}${id}` // Use ID if updating an existing product
-      : import.meta.env.VITE_API_KEY; // Use the base endpoint for adding a new product
+      ? `${import.meta.env.VITE_API_KEY}${id}`
+      : import.meta.env.VITE_API_KEY;
 
-    // Send the data to the API
-    request(endpoint, data)
+    request(endpoint, normalizedData)
       .then(() => {
         Swal.fire({
           title: "Success!",
@@ -92,7 +91,7 @@ function AddProducts() {
           icon: "success",
           confirmButtonText: "Ok",
         });
-        // Reset form data after successful submission
+
         setData({
           title: "",
           category: "",
@@ -104,7 +103,8 @@ function AddProducts() {
           size: "",
           description: "",
         });
-        navigate("/admin/addproducts");  // Redirect to the add products page
+
+        navigate("/admin/addproducts");
       })
       .catch((error) => {
         console.error(`Error ${id ? "updating" : "adding"} product:`, error);
@@ -113,7 +113,6 @@ function AddProducts() {
 
   return (
     <>
-      {/* Breadcrumbs for navigation */}
       <div className="breadcrumbs">
         <div className="container-fluid">
           <div className="row">
@@ -122,17 +121,16 @@ function AddProducts() {
                 <span>
                   <Link to={"/admin/dashboard"}>Admin</Link>
                 </span>{" "}
-                / <span>Add Product</span>
+                / <span>{id ? "Edit Product" : "Add Product"}</span>
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Add Product Form */}
       <div className="container-fluid" id="addProducts">
         <form onSubmit={handleSubmit}>
-          {/* First Row: Title, Category */}
+          {/* Title & Category */}
           <div className="row mb-3">
             <div className="col-md-6">
               <label htmlFor="title" className="form-label fw-bold">
@@ -160,12 +158,12 @@ function AddProducts() {
                 <option value="">Select Category</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
-                <option value="Kid">Kid</option>
+                <option value="Kids">Kids</option>
               </select>
             </div>
           </div>
 
-          {/* Second Row: Price, MRP, Image */}
+          {/* Price, MRP, Image */}
           <div className="row mb-3">
             <div className="col-md-4">
               <label htmlFor="price" className="form-label fw-bold">
@@ -208,7 +206,7 @@ function AddProducts() {
             </div>
           </div>
 
-          {/* Third Row: Brand, Color, Size */}
+          {/* Brand, Color, Size */}
           <div className="row mb-3">
             <div className="col-md-4">
               <label htmlFor="brand" className="form-label fw-bold">
@@ -225,6 +223,8 @@ function AddProducts() {
                 <option value="Bata">Bata</option>
                 <option value="Puma">Puma</option>
                 <option value="Nike">Nike</option>
+                <option value="Sega">Sega</option>
+                <option value="RedTape">RedTape</option>
               </select>
             </div>
             <div className="col-md-4">
@@ -263,7 +263,7 @@ function AddProducts() {
             </div>
           </div>
 
-          {/* Fourth Row: Description */}
+          {/* Description */}
           <div className="row mb-3">
             <div className="col-12">
               <label htmlFor="description" className="form-label fw-bold">
@@ -280,11 +280,11 @@ function AddProducts() {
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <div className="row">
             <div className="col text-center">
               <button className="btn btn-success" type="submit">
-                {id ? "Update Product" : "Add Product"} {/* Change button text based on whether it's add or edit */}
+                {id ? "Update Product" : "Add Product"}
               </button>
             </div>
           </div>

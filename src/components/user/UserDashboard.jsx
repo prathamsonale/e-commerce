@@ -15,8 +15,10 @@ function UserDashboard() {
   // Local state for loading and user information
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState({
-    name: "",
+    username: "",
     email: "",
+    phone: "",
+    password: "",
   });
 
   // Fetch user info when the component is mounted or when userId changes
@@ -28,8 +30,10 @@ function UserDashboard() {
         .then((response) => {
           // On success, set the user data
           setUserInfo({
-            name: response.data.name,
+            username: response.data.username,
             email: response.data.email,
+            phone: response.data.phone,
+            password: response.data.password
           });
         })
         .catch((error) => {

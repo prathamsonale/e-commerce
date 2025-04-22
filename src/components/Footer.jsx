@@ -118,10 +118,13 @@ function Footer() {
               {/* Company contact details */}
               <ul className="colorlib-footer-links">
                 <li>
-                  Ekondi Kagal Kolhapur, <br /> Maharashtra 416232 India
+                  Anand park, Wadgaon Sheri, <br /> Pune, Maharashtra, 411014
+                  India
                 </li>
                 <li>
-                  <a href="tel://1234567920">+91 8767765515</a>
+                  <a href="tel://1234567920">+91 9146475050</a>
+                  <br />
+                  <a href="tel://1234567920">+91 7498658311</a>
                 </li>
                 <li>
                   <a href="mailto:coolfootwear@gmail.com">

@@ -5,26 +5,26 @@ export const loginValidationSchema = () =>
   Yup.object().shape({
     // Email validation
     email: Yup.string()
-      .required("Email is required.") // Email cannot be empty
-      .email("Email must be a valid email address") // Must be a valid email format
+      .required("Email is required.")
+      .email("Email must be a valid email address")
       .matches(
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/,
-        "Email must be a valid email address & ends with domain .com" // Custom regex to ensure email ends with .com domain
+        "Email must be a valid email address & ends with domain .com"
       )
       .test(
         "is-empty",
-        "Email is required", // Custom test to ensure email is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if email has non-whitespace characters
+        "Email is required",
+        (value) => value && value.trim() !== ""
       ),
 
     // Password validation
     password: Yup.string()
-      .required("Password is required") // Password cannot be empty
-      .min(6, "Password must have at least 6 characters") // Password must have at least 6 characters
+      .required("Password is required")
+      .min(6, "Password must have at least 6 characters")
       .test(
         "is-empty",
-        "Password is required", // Custom test to ensure password is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if password has non-whitespace characters
+        "Password is required",
+        (value) => value && value.trim() !== ""
       ),
   });
 
@@ -33,130 +33,134 @@ export const signUpValidationSchema = () =>
   Yup.object().shape({
     // Name validation
     name: Yup.string()
-      .required("Name is required") // Name cannot be empty
-      .min(3, "Name must be at least 3 characters") // Name must have at least 3 characters
+      .required("Name is required")
+      .min(3, "Name must be at least 3 characters")
       .test(
         "is-empty",
-        "Name is required", // Custom test to ensure name is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if name has non-whitespace characters
+        "Name is required",
+        (value) => value && value.trim() !== ""
       ),
 
-    // Email validation (same as login)
+    // Email validation
     email: Yup.string()
-      .required("Email is required.") // Email cannot be empty
-      .email("Email must be a valid email address") // Must be a valid email format
+      .required("Email is required.")
+      .email("Email must be a valid email address")
       .matches(
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/,
-        "Email must be a valid email address & ends with domain .com" // Custom regex to ensure email ends with .com domain
+        "Email must be a valid email address & ends with domain .com"
       )
       .test(
         "is-empty",
-        "Email is required", // Custom test to ensure email is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if email has non-whitespace characters
+        "Email is required",
+        (value) => value && value.trim() !== ""
       ),
 
     // Password validation
     password: Yup.string()
-      .required("Password is required") // Password cannot be empty
-      .min(6, "Password must have at least 6 characters") // Password must have at least 6 characters
-      .max(10, "Password must have characters in between 6 to 10") // Password should not exceed 10 characters
+      .required("Password is required")
+      .min(6, "Password must have at least 6 characters")
+      .max(10, "Password must have characters in between 6 to 10")
       .test(
         "is-empty",
-        "Password is required", // Custom test to ensure password is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if password has non-whitespace characters
+        "Password is required",
+        (value) => value && value.trim() !== ""
+      ),
+
+    // Phone number validation (10-digit Indian number starting with 7, 8, or 9)
+    phone: Yup.string()
+      .required("Phone number is required.")
+      .matches(
+        /^[7-9][0-9]{9}$/,
+        "Phone number must be a 10-digit Indian number starting with 7, 8, or 9."
+      )
+      .test(
+        "is-empty",
+        "Phone number is required.",
+        (value) => value && value.trim() !== ""
       ),
   });
 
 // Validation schema for checkout page
 export const checkoutValidationSchema = () =>
   Yup.object().shape({
-    // Country selection validation
-    countrySelect: Yup.string().required("Country name is required."), // Country cannot be empty
+    countrySelect: Yup.string().required("Country name is required."),
 
-    // First name validation
     firstname: Yup.string()
-      .required("First name is required.") // First name cannot be empty
-      .min(3, "First name must be at least 3 characters.") // First name must have at least 3 characters
+      .required("First name is required.")
+      .min(3, "First name must be at least 3 characters.")
       .test(
         "is-empty",
-        "First name is required.", // Custom test to ensure first name is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if first name has non-whitespace characters
+        "First name is required.",
+        (value) => value && value.trim() !== ""
       ),
 
-    // Last name validation
     lastname: Yup.string()
-      .required("Last name is required.") // Last name cannot be empty
-      .min(3, "Last name must be at least 3 characters.") // Last name must have at least 3 characters
+      .required("Last name is required.")
+      .min(3, "Last name must be at least 3 characters.")
       .test(
         "is-empty",
-        "Last name is required.", // Custom test to ensure last name is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if last name has non-whitespace characters
+        "Last name is required.",
+        (value) => value && value.trim() !== ""
       ),
 
-    // Address validation
     address: Yup.string()
-      .required("Address is required.") // Address cannot be empty
-      .min(3, "Address must be at least 3 characters.") // Address must have at least 3 characters
+      .required("Address is required.")
+      .min(3, "Address must be at least 3 characters.")
       .test(
         "is-empty",
-        "Address is required.", // Custom test to ensure address is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if address has non-whitespace characters
+        "Address is required.",
+        (value) => value && value.trim() !== ""
       ),
 
-    // Town or city validation
     town: Yup.string()
-      .required("Town or city is required.") // Town or city cannot be empty
-      .min(3, "Town or city must be at least 3 characters.") // Town or city must have at least 3 characters
+      .required("Town or city is required.")
+      .min(3, "Town or city must be at least 3 characters.")
       .test(
         "is-empty",
-        "Town or city is required.", // Custom test to ensure town/city is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if town/city has non-whitespace characters
+        "Town or city is required.",
+        (value) => value && value.trim() !== ""
       ),
 
-    // State validation
     state: Yup.string()
-      .required("State is required.") // State cannot be empty
-      .min(3, "State name must have at least 3 characters.") // State must have at least 3 characters
+      .required("State is required.")
+      .min(3, "State name must have at least 3 characters.")
       .test(
         "is-empty",
-        "State is required.", // Custom test to ensure state is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if state has non-whitespace characters
+        "State is required.",
+        (value) => value && value.trim() !== ""
       ),
 
-    // Postal code validation (6-digit Indian postal code)
     postalcode: Yup.string()
-      .required("Zip/Postal code is required.") // Postal code cannot be empty
-      .matches(/^[0-9]{6}$/, "Zip / Postal code must be at least 6 numbers.") // Postal code must be a 6-digit number
+      .required("Zip/Postal code is required.")
+      .matches(/^[0-9]{6}$/, "Zip / Postal code must be at least 6 numbers.")
       .test(
         "is-empty",
-        "Zip/Postal code is required.", // Custom test to ensure postal code is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if postal code has non-whitespace characters
+        "Zip/Postal code is required.",
+        (value) => value && value.trim() !== ""
       ),
 
-    // Email validation (same as login)
     email: Yup.string()
-      .required("Email is required.") // Email cannot be empty
-      .email("Email must be a valid email address") // Must be a valid email format
+      .required("Email is required.")
+      .email("Email must be a valid email address")
       .matches(
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/,
-        "Email must be a valid email address & ends with domain .com" // Custom regex to ensure email ends with .com domain
+        "Email must be a valid email address & ends with domain .com"
       )
       .test(
         "is-empty",
-        "Email is required", // Custom test to ensure email is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if email has non-whitespace characters
+        "Email is required",
+        (value) => value && value.trim() !== ""
       ),
 
-    // Phone number validation (10-digit Indian number starting with 7, 8, or 9)
     phoneno: Yup.string()
-      .required("Phone number is required.") // Phone number cannot be empty
+      .required("Phone number is required.")
       .matches(
         /^[7-9][0-9]{9}$/,
-        "Phone number must be a 10-digit Indian number starting with 7, 8, or 9." // Validates Indian phone number
+        "Phone number must be a 10-digit Indian number starting with 7, 8, or 9."
       )
       .test(
         "is-empty",
-        "Phone number is required.", // Custom test to ensure phone number is not just whitespace
-        (value) => value && value.trim() !== "" // Checks if phone number has non-whitespace characters
+        "Phone number is required.",
+        (value) => value && value.trim() !== ""
       ),
   });

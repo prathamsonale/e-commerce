@@ -20,6 +20,7 @@ function SignUp() {
   const [usersData, setUserData] = useState({
     name: "",
     email: "",
+    phone : "",
     password: "",
   });
 
@@ -108,10 +109,10 @@ function SignUp() {
 
           // Dispatch the user ID to Redux store
           dispatch(setUserId(response.data.id));
-          
+
           // Clear form fields
-          setUserData({ name: "", email: "", password: "" });
-          
+          setUserData({ name: "", email: "", phone : "", password: "" });
+
           // Redirect to homepage
           navigate("/");
         } catch (error) {
@@ -141,8 +142,8 @@ function SignUp() {
 
   return (
     <>
-      {loading && <Loader />} {/* Show loading spinner if loading state is true */}
-      
+      {loading && <Loader />}{" "}
+      {/* Show loading spinner if loading state is true */}
       {/* Breadcrumb navigation */}
       <div className="breadcrumbs">
         <div className="container-fluid">
@@ -160,7 +161,6 @@ function SignUp() {
           </div>
         </div>
       </div>
-
       {/* Main sign-up form */}
       <div
         className="container-fluid d-flex justify-content-center align-items-center"
@@ -170,22 +170,7 @@ function SignUp() {
           <div className="col-lg-6">
             <form>
               <h1>Register With</h1>
-              <div className="social-icons">
-                {/* Social login icons */}
-                <Link to="#" className="icon">
-                  <i className="fa-brands fa-google-plus-g"></i>
-                </Link>
-                <Link to="#" className="icon">
-                  <i className="fa-brands fa-facebook-f"></i>
-                </Link>
-                <Link to="#" className="icon">
-                  <i className="fa-brands fa-github"></i>
-                </Link>
-                <Link to="#" className="icon">
-                  <i className="fa-brands fa-linkedin-in"></i>
-                </Link>
-              </div>
-              <h1>OR</h1>
+
               <div className="d-flex justify-content-start align-items-start flex-column">
                 {/* Name input field */}
                 <div className="email mb-3 d-flex justify-content-start align-items-start flex-column">
@@ -214,7 +199,7 @@ function SignUp() {
                     onChange={handleChange}
                     type="text"
                     placeholder="Email"
-                    onKeyDown={(e) => handleKeyDown(e, "password", "name")}
+                    onKeyDown={(e) => handleKeyDown(e, "phone", "name")}
                   />
                   {error.email && (
                     <span
@@ -222,6 +207,25 @@ function SignUp() {
                       style={{ fontSize: "13px" }}
                     >
                       {error.email}
+                    </span>
+                  )}
+                </div>
+                {/* Phone input field */}
+                <div className="email mb-3 d-flex justify-content-start align-items-start flex-column">
+                  <input
+                    id="phone"
+                    value={usersData.phone}
+                    onChange={handleChange}
+                    type="text"
+                    placeholder="Phone"
+                    onKeyDown={(e) => handleKeyDown(e, "password", "email")}
+                  />
+                  {error.name && (
+                    <span
+                      className="text-danger fw-bold"
+                      style={{ fontSize: "13px" }}
+                    >
+                      {error.name}
                     </span>
                   )}
                 </div>
@@ -233,7 +237,7 @@ function SignUp() {
                     onChange={handleChange}
                     type={passwordStatus ? "text" : "password"}
                     placeholder="Password"
-                    onKeyDown={(e) => handleKeyDown(e, "", "email")}
+                    onKeyDown={(e) => handleKeyDown(e, "", "phone")}
                   />
                   <span onClick={() => setPasswordStatus(!passwordStatus)}>
                     {passwordStatus ? (

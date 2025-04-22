@@ -3,83 +3,81 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../redux/cart/cartSlice";
-import { addToWishlist, removeFromWishlist } from "../redux/cart/wishlistslice";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../redux/cart/wishlistslice";
 import { checkUserLoggedIn } from "./reuseable-code/CheckedLoggedIn";
 import AllProductsSkeletonLoader from "./reuseable-code/AllProductsSkeletonLoader";
-import { LazyLoadImage } from "react-lazy-load-image-component"; // Import LazyLoadImage for optimized image loading
-import "react-lazy-load-image-component/src/effects/blur.css"; // Import blur effect during image load
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const AllProducts = () => {
-  const [products, setProducts] = useState([]); // State to hold the list of products
-  const [loading, setLoading] = useState(true); // State to manage loading status
-  const wishlist = useSelector((state) => state.wishlist.items); // Selector to get wishlist items from Redux store
-  const dispatch = useDispatch(); // Dispatch hook to dispatch actions
-  const [modalVisible, setModalVisible] = useState(false); // State to manage visibility of login modal
-  const [hasScrolled, setHasScrolled] = useState(false); // State to track if the user has scrolled
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const wishlist = useSelector((state) => state.wishlist.items);
+  const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [pageRange, setPageRange] = useState([1, 10]); // Page range (1-10, 11-20, etc.)
+  const [pageRange, setPageRange] = useState([1, 10]);
   const [filters, setFilters] = useState({
-    // State to hold the selected filter values
     category: "",
     brand: "",
     size: "",
     sort: "",
   });
 
-  // Function to fetch products from the API
   const fetchProducts = async () => {
     try {
-      setLoading(true); // Set loading to true before fetching
-      const response = await axios.get(import.meta.env.VITE_API_KEY); // Make API request using the API key
+      setLoading(true);
+      const response = await axios.get(import.meta.env.VITE_API_KEY);
       if (response && response.data) {
-        setProducts(response.data); // Set the products state with the response data
-        setTotalPages(Math.ceil(response.data.length / 12)); // Use Math.ceil to round up the total pages
+        const allProducts = response.data.allProducts || [];
+        setProducts(allProducts);
+        setTotalPages(Math.ceil(allProducts.length / 12));
       }
     } catch (error) {
-      console.error("Error fetching products:", error); // Log error if API request fails
+      console.error("Error fetching products:", error);
     } finally {
-      setLoading(false); // Set loading to false once fetching is done
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProducts(); // Fetch products when the component mounts
+    fetchProducts();
     window.scrollTo(0, 0);
   }, [page]);
 
   const selectPageHandler = (selectedPage) => {
-    // Check if the selected page is within the valid range and not the current page
     if (
-      selectedPage >= 1 && // The selected page must be at least 1
-      selectedPage <= totalPages && // The selected page must not exceed the total number of pages
-      selectedPage !== page // The selected page must be different from the current page
+      selectedPage >= 1 &&
+      selectedPage <= totalPages &&
+      selectedPage !== page
     )
-      // If the conditions are met, update the current page state
       setPage(selectedPage);
   };
 
-  // Function to reset the filter values to default (empty strings)
   const resetFilters = () => {
     setFilters({ category: "", brand: "", size: "", sort: "" });
   };
 
-  // Function to handle adding a product to the cart
   const handleAddToCart = (product) => {
-    const { id, imageUrl, title, price } = product; // Destructure product properties
-    dispatch(addProduct({ id, imageUrl, title, price, quantity: 1 })); // Dispatch addProduct action to add item to cart
+    const { productId, imageUrl, title, price } = product;
+    dispatch(
+      addProduct({ id: productId, imageUrl, title, price, quantity: 1 })
+    );
   };
 
-  // Function to toggle product's presence in the wishlist
   const toggleWishlist = (productId) => {
     if (wishlist.includes(productId)) {
-      dispatch(removeFromWishlist(productId)); // Remove from wishlist if it is already present
+      dispatch(removeFromWishlist(productId));
     } else {
-      dispatch(addToWishlist(productId)); // Add to wishlist if not already present
+      dispatch(addToWishlist(productId));
     }
   };
 
-  // Apply filters on the list of products
   const filteredProducts = products
     .filter(
       (product) =>
@@ -88,85 +86,39 @@ const AllProducts = () => {
         (filters.size === "" || product.size === filters.size)
     )
     .sort((a, b) => {
-      if (filters.sort === "lowToHigh") return a.price - b.price; // Sort price from low to high
-      if (filters.sort === "highToLow") return b.price - a.price; // Sort price from high to low
-      return 0; // No sorting
+      if (filters.sort === "lowToHigh") return a.price - b.price;
+      if (filters.sort === "highToLow") return b.price - a.price;
+      return 0;
     });
 
-  // Apply pagination after filtering
   const displayedProducts = filteredProducts.slice((page - 1) * 12, page * 12);
 
-  // Update page range based on the current page
   const updatePageRange = (currentPage) => {
-    // Calculate the starting page of the range
-    // - Subtract 1 from currentPage to make it 0-based
-    // - Divide by 10 to determine the block of pages (each block has 10 pages)
-    // - Multiply by 10 to get the starting page of the block
-    // - Add 1 to make the starting page 1-based
     const startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
-
-    // Calculate the ending page of the range
-    // - Add 9 to the startPage to get a range of 10 pages (startPage to startPage + 9)
-    // - Ensure the end page doesn't exceed totalPages by using Math.min
     const endPage = Math.min(startPage + 9, totalPages);
-
-    // Set the calculated page range (from startPage to endPage)
     setPageRange([startPage, endPage]);
   };
 
-  // useEffect to update page range and scroll to top whenever the page or totalPages changes
   useEffect(() => {
-    // Update the page range whenever the current page changes
     updatePageRange(page);
-
-    // Scroll the window to the top to ensure the user sees the top of the page range
     window.scrollTo(0, 0);
-  }, [page, totalPages]); // Dependencies: this effect runs whenever 'page' or 'totalPages' changes
+  }, [page, totalPages]);
 
-  // Function to go to the next page range (next 10 pages)
   const goToNextRange = () => {
-    // Calculate the starting page for the next range (one page after the last page in the current range)
     const newStartPage = pageRange[1] + 1;
-
-    // If the new start page is within the valid range (not exceeding totalPages), update the current page
     if (newStartPage <= totalPages) {
-      setPage(newStartPage); // Set the new page
+      setPage(newStartPage);
     }
   };
 
-  // Function to go to the previous page range (previous 10 pages)
   const goToPreviousRange = () => {
-    // Calculate the starting page for the previous range (10 pages before the current start page)
     const newStartPage = pageRange[0] - 12;
-
-    // If the new start page is greater than 0, update the current page
     if (newStartPage > 0) {
-      setPage(newStartPage); // Set the new page
+      setPage(newStartPage);
     }
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!checkUserLoggedIn())
-        if (!hasScrolled) {
-          // Check if user is logged in
-          setModalVisible(true); // Show modal on first scroll if user is not logged in
-          setHasScrolled(true); // Mark as scrolled to prevent future modals
-        }
-    };
-
-    window.addEventListener("scroll", handleScroll); // Add scroll event listener to show modal on scroll
-
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [hasScrolled]);
-
-  // Function to close the modal
-  const closeModal = () => {
-    setModalVisible(false); // Close the modal when the user clicks on 'Stay logged out'
-  };
+  
 
   return (
     <>
@@ -187,7 +139,6 @@ const AllProducts = () => {
         </div>
       </div>
 
-      {/* Modal to show when user scrolls without being logged in */}
       {modalVisible && (
         <div className="modal">
           <div className="modal-content">
@@ -210,7 +161,6 @@ const AllProducts = () => {
         </div>
       )}
 
-      {/* Filter section for sorting products */}
       <div className="filter mb-3">
         <label className="form-label me-3 mt-1">
           <b>Sort By:</b>
@@ -229,7 +179,6 @@ const AllProducts = () => {
       <div className="container-fluid" id="addProduct">
         <div className="special">
           <div className="row">
-            {/* Sidebar filter section for category, brand, and size */}
             <div className="col-lg-3">
               <div className="side border border-dark mb-1">
                 <h3>Category</h3>
@@ -237,13 +186,11 @@ const AllProducts = () => {
                   {["All", "Male", "Female", "Kid"].map((category) => (
                     <li
                       key={category}
-                      onClick={() => {
-                        if (category === "All") {
-                          resetFilters();
-                        } else {
-                          setFilters({ ...filters, category });
-                        }
-                      }}
+                      onClick={() =>
+                        category === "All"
+                          ? resetFilters()
+                          : setFilters({ ...filters, category })
+                      }
                     >
                       <Link to="#">{category}</Link>
                     </li>
@@ -256,13 +203,11 @@ const AllProducts = () => {
                   {["All", "Nike", "Adidas", "Bata", "Puma"].map((brand) => (
                     <li
                       key={brand}
-                      onClick={() => {
-                        if (brand === "All") {
-                          resetFilters();
-                        } else {
-                          setFilters({ ...filters, brand });
-                        }
-                      }}
+                      onClick={() =>
+                        brand === "All"
+                          ? resetFilters()
+                          : setFilters({ ...filters, brand })
+                      }
                     >
                       <Link to="#">{brand}</Link>
                     </li>
@@ -276,13 +221,11 @@ const AllProducts = () => {
                     (size) => (
                       <li
                         key={size}
-                        onClick={() => {
-                          if (size === "All") {
-                            resetFilters();
-                          } else {
-                            setFilters({ ...filters, size });
-                          }
-                        }}
+                        onClick={() =>
+                          size === "All"
+                            ? resetFilters()
+                            : setFilters({ ...filters, size })
+                        }
                       >
                         <Link>{size}</Link>
                       </li>
@@ -292,12 +235,10 @@ const AllProducts = () => {
               </div>
             </div>
 
-            {/* Products Display */}
             <div className="col-lg-9">
               <div className="row d-flex justify-content-around">
                 {loading
-                  ? // Show SkeletonLoader for each product card while loading
-                    Array(9) // Replace with filteredProducts.length or dynamically based on your requirement
+                  ? Array(9)
                       .fill(0)
                       .map((_, index) => (
                         <div
@@ -307,37 +248,38 @@ const AllProducts = () => {
                           <AllProductsSkeletonLoader />
                         </div>
                       ))
-                  : displayedProducts.length > 0 &&
-                    displayedProducts.map((product, index) => (
+                  : displayedProducts.map((product, index) => (
                       <div
                         key={index}
                         className="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex justify-content-center align-items-center"
                       >
                         <div className="card bg-white h-100 allProduct text-dark">
                           <div className="card-body">
-                            {/* Wishlist icon */}
                             <div
                               className={`wishlist-icon ${
-                                wishlist.includes(product.id) ? "red" : "gray"
+                                wishlist.includes(product.productId)
+                                  ? "red"
+                                  : "gray"
                               }`}
-                              onClick={() => toggleWishlist(product.id)}
+                              onClick={() =>
+                                toggleWishlist(product.productId)
+                              }
                             >
-                              {wishlist.includes(product.id) ? (
+                              {wishlist.includes(product.productId) ? (
                                 <i className="fa-solid fa-heart"></i>
                               ) : (
                                 <i className="fa-regular fa-heart"></i>
                               )}
                             </div>
 
-                            {/* Product Details */}
-                            <Link to={`/productdetail/${product.id}`}>
+                            <Link to={`/productdetail/${product.productId}`}>
                               <LazyLoadImage
-                                src={product.imageUrl} // Image source
+                                src={product.imageUrl}
                                 alt={product.title}
                                 width="200"
                                 height="150"
                                 className="mb-2"
-                                effect="blur" // Optional: Adds a blur effect while loading
+                                effect="blur"
                               />
                               <h5 className="card-title fw-bold text-dark">
                                 {product.title}
@@ -363,10 +305,9 @@ const AllProducts = () => {
                       </div>
                     ))}
               </div>
-              {/* Pagination Controls */}
+
               {displayedProducts.length > 0 && (
                 <div className="pagination">
-                  {/* Previous Range Button */}
                   <span
                     onClick={goToPreviousRange}
                     className={pageRange[0] > 1 ? "" : "pagination__disabled"}
@@ -396,7 +337,6 @@ const AllProducts = () => {
                   >
                     ▶️
                   </span>
-                  {/* Next Range Button */}
                   <span
                     onClick={goToNextRange}
                     className={
